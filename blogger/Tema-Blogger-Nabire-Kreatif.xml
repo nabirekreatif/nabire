@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:js='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' lang='id' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+<meta charset='utf-8'/>
+<meta content='width=device-width,initial-scale=1,viewport-fit=cover' name='viewport'/>
+<meta content='#0A4C7A' name='theme-color'/>
+<b:include data='blog' name='all-head-content'/>
+<b:if cond='data:view.isHomepage'>
+<title>Nabire Kreatif — Membangun Masa Depan Digital Nabire</title>
+<meta content='Jasa website &amp; aplikasi web untuk UMKM Nabire, katalog produk digital dan kelas online. Akses lewat transfer, QRIS, atau Redeem Kode Akses.' name='description'/>
+<b:else/>
+<title><data:view.title.escaped/> · Nabire Kreatif</title>
+</b:if>
+<link href='https://nabirekreatif.github.io/nabire-kreatif/assets/favicon.png' rel='icon' type='image/png'/>
+<link href='https://fonts.googleapis.com' rel='preconnect'/><link crossorigin='anonymous' href='https://fonts.gstatic.com' rel='preconnect'/>
+<link crossorigin='anonymous' href='https://nabirekreatif.github.io' rel='preconnect'/>
+<b:if cond='data:view.isHomepage'>
+<link crossorigin='anonymous' href='https://script.google.com' rel='preconnect'/>
+<link as='script' href='https://nabirekreatif.github.io/nabire-kreatif/dist/nk.min.js?v=165437bb' rel='preload'/>
+<link href='https://nabirekreatif.github.io/nabire-kreatif/dist/nk.min.css?v=165437bb' rel='stylesheet'/>
+</b:if>
+<link href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap' media='print' onload='this.media=&quot;all&quot;' rel='stylesheet'/>
+<b:skin><![CDATA[
+html{background:#eef4ff}html.nk-ns #nk-shell{display:none}
+body.nkp-w{font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0b1c30;background:#F8FAFC;min-height:100vh;margin:0}
+.nkp-h{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:5}
+.nkp-h div{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.nkp-h a{color:#0A4C7A;text-decoration:none;font-weight:800}.nkp-h img{width:34px;height:34px;border-radius:8px}
+.nkp-h .bk{margin-left:auto;font-size:14px;background:#eaf2fb;padding:10px 14px;border-radius:8px}
+.nkp{max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.nkp-a{background:#fff;border-radius:16px;padding:22px;box-shadow:0 1px 3px rgba(10,76,122,.06),0 4px 12px rgba(10,76,122,.04);margin-bottom:18px}
+.nkp-t{font-size:26px;line-height:34px;color:#0A4C7A;margin:0 0 12px}.nkp-b{font-size:16px;line-height:27px;overflow-wrap:anywhere}.nkp-b img{max-width:100%;height:auto;border-radius:10px}
+.nkp-f{text-align:center;color:#64748b;font-size:13px;padding:20px 16px 30px}.nkp-f a{color:inherit;font-weight:700}
+]]></b:skin>
+<b:if cond='data:view.isHomepage'>
+<script>//<![CDATA[
+window.NK_CONFIG={GAS_URL:"https://script.google.com/macros/s/AKfycbzKuf8GUWiX7-vbGvfvrZKXmj0h_n_UI-G9d9eQ5KGdsL6eEn1nQI6Cjh8y12yEtptM/exec",GOOGLE_CLIENT_ID:"",BASE:"https://nabirekreatif.github.io/nabire-kreatif/"};
+(function(h){if(h&&!/^#\/?(layanan|demo|testimoni|jasa)?(\?.*)?$/.test(h))document.documentElement.className+=' nk-ns'})(location.hash)
+//]]></script>
+<script defer='defer' src='https://nabirekreatif.github.io/nabire-kreatif/dist/nk.min.js?v=165437bb'></script>
+</b:if>
+</head>
+<body>
+<b:class cond='!data:view.isHomepage' name='nkp-w'/>
+<b:if cond='data:view.isHomepage'>
+<div id='app'><div id='nk-shell'><div id="banner"></div><header id="topbar"><div class="wrap-c tb"><a class="brand" href="#/" id="brand"><img src="https://nabirekreatif.github.io/nabire-kreatif/assets/logo-icon.png" alt="" width="38" height="38" /><span><b>Nabire <i>Kreatif</i></b><small>Digital Hub Nabire</small></span></a><nav class="nav-l" id="nav-pub"><a href="#/" class="on">Beranda</a><a href="#/layanan" class="">Layanan<br />Web</a><a href="#/katalog" class="">Produk<br />Digital</a><a href="#/katalog/kelas" class="">Kelas<br />Online</a><a href="#/demo" class="">Portofolio<br />&amp; Demo</a><a href="#/testimoni" class="">Testimoni</a></nav><div class="tb-r" id="acct"><a class="btn out hid-m" href="#/redeem"><svg xmlns="http://www.w3.org/2000/svg" class="ic sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg>Redeem Kode</a><a class="btn soft" href="#/masuk"><svg xmlns="http://www.w3.org/2000/svg" class="ic sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Masuk</span></a><a class="btn pri hid-m" href="#/jasa"><svg xmlns="http://www.w3.org/2000/svg" class="ic sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Konsultasi</a></div></div></header><main id="view"><section class="hero"><div class="wrap-c hero-g"><div><span class="pill" style="background:#fff;box-shadow:var(--sh)"><span class="dot"></span>Akselerasi Digital Papua Tengah</span><h1 class="h1" style="margin-top:16px"><span class="b">Membangun Masa Depan Digital</span> <span class="a">Nabire</span></h1><p class="muted" style="margin-top:14px;font-size:16px;max-width:520px">Nabire Kreatif adalah mitra strategis untuk UMKM dan pebisnis online. Kami percaya setiap bisnis berhak memiliki tampilan profesional tanpa harus mengeluarkan biaya puluhan juta.</p><div class="row wrap mt"><a class="btn pri" href="#/jasa"><svg xmlns="http://www.w3.org/2000/svg" class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Pesan Jasa Website</a><a class="btn out" href="#/demo"><svg xmlns="http://www.w3.org/2000/svg" class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Lihat Demo Portofolio &amp; Katalog</a></div><div class="hero-st"><div><b>35+</b><span>UMKM Nabire Go Digital</span></div><div><b>100%</b><span>Akses Google Cloud</span></div><div><b>&lt; 3 Hari</b><span>Proses Bisa Cepat</span></div></div></div><div class="hs" aria-hidden="true"><div class="hs-glow"></div><div class="hs-pc"><div class="hs-mon"><div class="hs-top"><i></i><i></i><i></i><span>nabirekreatif.com/#/admin</span></div><div class="hs-app"><div class="hs-side"><b></b><i class="on"></i><i></i><i></i><i></i><i></i></div><div class="hs-main"><div class="hs-h"><b>Dasbor Penjualan</b><span>Hari ini</span></div><div class="hs-kpi"><span><small>Pendapatan</small><em>Rp 5,6 jt</em></span><span><small>Pesanan</small><em>128</em></span><span class="o"><small>Member</small><em>+32</em></span></div><div class="hs-chart"><i style="--h:38%;--d:0"></i><i style="--h:56%;--d:1"></i><i style="--h:44%;--d:2"></i><i style="--h:70%;--d:3"></i><i style="--h:52%;--d:4"></i><i style="--h:84%;--d:5"></i><i style="--h:66%;--d:6"></i></div><div class="hs-rows"><i></i><i></i><i></i></div></div></div></div><div class="hs-neck"></div><div class="hs-base"></div></div><div class="hs-ph"><div class="hs-scr"><div class="hs-cv"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 14" preserveAspectRatio="none"><path d="M0 8C16 2 30 2 48 8s34 7 52 0V14H0Z" fill="#FAF7F0"/></svg></div><div class="hs-av">NK</div><b class="hs-nm">Toko Kopi Nabire</b><small class="hs-ct">Nabire, Papua Tengah</small><i class="hs-pl"></i><i class="hs-pl"></i><i class="hs-pl o"></i><div class="hs-pr"><span><i></i><b>Kopi</b><em>35rb</em></span><span><i class="b"></i><b>Roti</b><em>20rb</em></span></div></div></div><div class="hs-b1"><span><svg xmlns="http://www.w3.org/2000/svg" class="ic sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span><div><b>Pesanan baru</b><small>Rp 150.000 · QRIS</small></div></div><div class="hs-b2"><span><svg xmlns="http://www.w3.org/2000/svg" class="ic sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/></svg></span><div><b>Link Bio online</b><small>/#tokokopi</small></div></div></div></div></section></main><nav id="bnav"><a href="#/" class="on"><svg xmlns="http://www.w3.org/2000/svg" class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg><span>Beranda</span></a><a href="#/katalog" class=""><svg xmlns="http://www.w3.org/2000/svg" class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/></svg><span>Katalog</span></a><a href="#/redeem" class=""><svg xmlns="http://www.w3.org/2000/svg" class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg><span>Redeem</span></a><a href="#/masuk" class=""><svg xmlns="http://www.w3.org/2000/svg" class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Member</span></a></nav></div></div>
+<script>//<![CDATA[
+['net','toasts','modal-root'].forEach(function(id){if(!document.getElementById(id)){var e=document.createElement('div');e.id=id;if(id==='net')e.className='net';if(id==='toasts')e.setAttribute('aria-live','polite');document.body.appendChild(e);}});
+//]]></script>
+<noscript><div style='padding:24px;text-align:center'>Aktifkan JavaScript untuk membuka Nabire Kreatif.</div></noscript>
+<b:else/>
+<header class='nkp-h'><div><a href='/'><img alt='' src='https://nabirekreatif.github.io/nabire-kreatif/assets/logo-icon.png'/></a><a href='/'>Nabire Kreatif</a><a class='bk' href='/#/katalog'>Katalog</a></div></header>
+</b:if>
+<b:section class='nkp' id='main' maxwidgets='1' showaddelement='no'>
+<b:widget id='Blog1' locked='true' title='Postingan Blog' type='Blog' version='2' visible='true'>
+<b:includable id='main'>
+<b:if cond='!data:view.isHomepage'>
+<b:loop values='data:posts' var='post'>
+<article class='nkp-a'>
+<h1 class='nkp-t'><data:post.title/></h1>
+<div class='nkp-b'><data:post.body/></div>
+</article>
+</b:loop>
+</b:if>
+</b:includable>
+</b:widget>
+</b:section>
+<b:if cond='!data:view.isHomepage'>
+<footer class='nkp-f'>&#169; Nabire Kreatif · <a href='/'>nabirekreatif.com</a></footer>
+</b:if>
+</body>
+</html>
