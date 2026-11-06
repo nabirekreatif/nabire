@@ -1,8 +1,33 @@
 # Panduan Instalasi — Portal Nabire Kreatif
 
+## Pembaruan v5.1 (7 November 2026)
+1. **Backend:** ganti `Kode.gs` → Terapkan → Kelola deployment → Versi baru. (Deskripsi produk kini bisa panjang hingga 20.000 karakter — sebelumnya terpotong di 1.500.)
+2. **GitHub:** ekstrak `Nabire-Kreatif-Frontend-v5.1.zip` ke folder repo `nabire` (timpa), lalu `git add . && git commit -m "v5.1" && git push`.
+3. **Blogger:** Tema → ▾ → Cadangkan → ▾ → Pulihkan → `Tema-Blogger-Nabire-Kreatif.xml` (aset diambil dari `https://nabirekreatif.github.io/nabire/`).
+
+### Menulis deskripsi produk berformat
+Di Admin → Produk → Ubah, kolom **Deskripsi produk** punya toolbar: **B** tebal, *I* miring, S coret, Sorot, **H** judul bagian, h subjudul, • poin, 1. urutan, ☑ centang, ❝ kutipan/catatan, ▦ tabel, — garis, 🔗 tautan, dan tab **Pratinjau**. Tekan Enter di daftar untuk lanjut otomatis. Contoh:
+```
+## Fitur utama
+* Link bio interaktif: profil, slide promo, sosial media
+* Katalog produk dengan **pencarian** dan filter
+
+| Paket | Harga |
+| --- | --- |
+| Basic | Rp 149.000 |
+```
+Deskripsi panjang otomatis diringkas dengan tombol **Baca selengkapnya**.
+
+### Postingan & halaman Blogger
+- **Beranda** (`/`) = portal Nabire Kreatif (tidak terpengaruh postingan).
+- **Postingan** = artikel Nabire Kreatif dengan tampilan rapi: label, tanggal, tombol bagikan (WhatsApp/Facebook/Telegram), ajakan pesan jasa, artikel sebelumnya/berikutnya. Daftar artikel di `/search`, per label di `/search/label/NamaLabel`, ada kotak cari dan baris label. Tautan "Artikel & Tips" muncul di footer portal.
+- **Halaman** (`/p/...`) = kanvas KOSONG: tanpa header, footer, atau gaya tema. Tempel kode HTML Anda sendiri (mode *Tampilan HTML* di editor halaman) untuk landing page produk tertentu.
+- Komentar Blogger belum ditampilkan di tema ini.
+
+
 ## Pembaruan v5 (November 2026) — langkah singkat
 1. **Backend:** ganti isi `Kode.gs` di Apps Script dengan versi baru → **Terapkan → Kelola deployment → pensil → Versi baru → Terapkan**. Kolom baru (galeri foto, link demo, grup WA) dibuat otomatis pada permintaan pertama — tidak perlu menjalankan apa pun.
-2. **GitHub (aset situs):** ekstrak `Nabire-Kreatif-Frontend-v5.zip` ke folder repo `nabire-kreatif` (timpa berkas lama; `js/config.js` di ZIP sudah berisi URL backend Anda), lalu:
+2. **GitHub (aset situs):** ekstrak ZIP frontend ke folder repo Anda (timpa berkas lama; `js/config.js` di ZIP sudah berisi URL backend Anda), lalu:
    ```bash
    git add . && git commit -m "Rilis v5: beranda baru, galeri produk, lebih cepat" && git push
    ```

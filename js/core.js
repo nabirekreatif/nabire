@@ -266,7 +266,7 @@
   function reveal(root) {
     if (!('IntersectionObserver' in w) || (w.matchMedia && w.matchMedia('(prefers-reduced-motion:reduce)').matches)) return;
     if (rvIO) rvIO.disconnect();
-    const done = el => { el.classList.add('in'); setTimeout(() => { el.classList.remove('rv', 'in'); el.style.transitionDelay = ''; }, 1000); };
+    const done = el => { el.classList.add('rv-on'); setTimeout(() => { el.classList.remove('rv', 'rv-on'); el.style.transitionDelay = ''; }, 1000); };
     rvIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { done(e.target); rvIO.unobserve(e.target); } }), { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
     const seen = new Set();
     root.querySelectorAll(RV_SEL).forEach(el => { if (seen.has(el) || el.closest('.rv')) return; seen.add(el); const sib = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0; el.classList.add('rv'); el.style.transitionDelay = Math.min(sib, 5) * 70 + 'ms'; rvIO.observe(el); });
@@ -333,8 +333,11 @@
   const isAdmin = () => !!(S.session && S.session.role === 'superadmin');
   function jsonSetting(k) { try { const j = JSON.parse(setting(k) || '[]'); return Array.isArray(j) ? j : []; } catch (e) { return []; } }
   /** Alamat aset statis (logo, SDK). Di Blogger/domain lain, aset diambil dari GitHub Pages (NK_CONFIG.BASE). */
-  const BASE = CFG.BASE != null ? CFG.BASE : (/github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname) || location.protocol === 'file:' ? '' : 'https://nabirekreatif.github.io/nabire-kreatif/');
+  /* tanpa NK_CONFIG.BASE: ambil dari alamat bundel (…/dist/nk.min.js) supaya aset ikut repo mana pun (nabire, nabire-kreatif, dst.) */
+  const SELF_SRC = (document.currentScript && document.currentScript.src) || '';
+  const BASE = CFG.BASE != null ? CFG.BASE : /\/dist\/nk\.min\.js/.test(SELF_SRC) && new URL(SELF_SRC).host !== location.host ? SELF_SRC.replace(/dist\/nk\.min\.js.*$/, '') : (/github\.io$|^localhost$|^127\.0\.0\.1$/.test(location.hostname) || location.protocol === 'file:' || /\/dist\/nk\.min\.js/.test(SELF_SRC) ? '' : 'https://nabirekreatif.github.io/nabire/');
   const asset = p => BASE + p;
+  const IS_BLOGGER = !!document.querySelector('meta[content*="blogger" i], link[href*="blogger.com"]') || /blogspot\.com$/.test(location.hostname) || !!(w.NK_CONFIG && w.NK_CONFIG.BLOGGER);
   function logoImg() { return safeUrl(setting('logo_url')) || asset('assets/logo-icon.png'); }
   function brandHTML(sub) { return '<img src="' + esc(logoImg()) + '" alt="" width="38" height="38"><span><b>' + brandName() + '</b><small>' + esc(sub) + '</small></span>'; }
   function brandName() { const n = appName().split(' '); return esc(n[0]) + (n.length > 1 ? ' <i>' + esc(n.slice(1).join(' ')) + '</i>' : ''); }
@@ -403,7 +406,7 @@
   function acctHTML() { const me = S.session; if (!me) return ''; return '<button class="btn ghost" data-act="reload" title="Muat ulang data" aria-label="Muat ulang">' + ic('refresh') + '</button><div class="t"><b>' + esc(me.nama || me.email) + '</b><span>' + (me.role === 'superadmin' ? 'Super Admin' : 'Lisensi Terverifikasi') + '</span></div><div class="avatar">' + esc(initials(me.nama || me.email)) + '</div>'; }
   function footerHTML() {
     const wa = setting('wa_admin'), tampil = setting('wa_tampil'), em = setting('email_publik');
-    return '<div class="wrap-c"><div class="ft-g"><div><a class="brand" href="#/">' + brandHTML('Digital Hub Nabire') + '</a><p class="small muted" style="margin-top:12px;max-width:340px">' + esc(setting('footer_deskripsi')) + '</p></div><div><h5>Layanan & Katalog</h5><ul><li><a href="#/layanan">Website UMKM & Bisnis</a></li><li><a href="#/katalog">Produk Digital & Template</a></li><li><a href="#/katalog/kelas">Kelas Online Video</a></li><li><a href="#/demo">Galeri Karya Demo</a></li></ul></div><div><h5>Akses Member</h5><ul><li><a href="#/redeem">Redeem Kode Akses</a></li><li><a href="#/masuk">Masuk Area Member</a></li><li><a href="#/daftar">Daftar Akun Baru</a></li><li><a href="#/jasa">Pesan Jasa Website</a></li></ul></div><div><h5>Kontak & Dukungan</h5><ul>' + (wa ? '<li class="row">' + ic('chat', 'sm') + '<a href="' + esc(waLink(wa)) + '" target="_blank" rel="noopener">WhatsApp ' + esc(tampil || wa) + '</a></li>' : '') + '<li class="row">' + ic('pin', 'sm') + '<span>' + esc(setting('alamat')) + '</span></li>' + (em ? '<li class="row">' + ic('mail', 'sm') + '<a href="mailto:' + esc(em) + '">' + esc(em) + '</a></li>' : '') + '</ul></div></div><div class="ft-b"><span>© ' + new Date().getFullYear() + ' ' + esc(appName()) + '. Seluruh hak cipta dilindungi.</span><span>Wilayah waktu: WIT (UTC+9)</span></div></div>';
+    return '<div class="wrap-c"><div class="ft-g"><div><a class="brand" href="#/">' + brandHTML('Digital Hub Nabire') + '</a><p class="small muted" style="margin-top:12px;max-width:340px">' + esc(setting('footer_deskripsi')) + '</p></div><div><h5>Layanan & Katalog</h5><ul><li><a href="#/layanan">Website UMKM & Bisnis</a></li><li><a href="#/katalog">Produk Digital & Template</a></li><li><a href="#/katalog/kelas">Kelas Online Video</a></li><li><a href="#/demo">Galeri Karya Demo</a></li>' + (IS_BLOGGER ? '<li><a href="/search">Artikel & Tips</a></li>' : '') + '</ul></div><div><h5>Akses Member</h5><ul><li><a href="#/redeem">Redeem Kode Akses</a></li><li><a href="#/masuk">Masuk Area Member</a></li><li><a href="#/daftar">Daftar Akun Baru</a></li><li><a href="#/jasa">Pesan Jasa Website</a></li></ul></div><div><h5>Kontak & Dukungan</h5><ul>' + (wa ? '<li class="row">' + ic('chat', 'sm') + '<a href="' + esc(waLink(wa)) + '" target="_blank" rel="noopener">WhatsApp ' + esc(tampil || wa) + '</a></li>' : '') + '<li class="row">' + ic('pin', 'sm') + '<span>' + esc(setting('alamat')) + '</span></li>' + (em ? '<li class="row">' + ic('mail', 'sm') + '<a href="mailto:' + esc(em) + '">' + esc(em) + '</a></li>' : '') + '</ul></div></div><div class="ft-b"><span>© ' + new Date().getFullYear() + ' ' + esc(appName()) + '. Seluruh hak cipta dilindungi.</span><span>Wilayah waktu: WIT (UTC+9)</span></div></div>';
   }
 
   /* ---------------- polling ringan (hanya admin) + sinkron saat kembali ke tab ---------------- */
@@ -473,6 +476,65 @@
   }
 
   /* ---------------- start ---------------- */
+  /* Tombol lihat/sembunyikan kata sandi (di dalam kolom) */
+  const pwEye = '<button type="button" class="eye" data-act="pw-toggle" aria-label="Tampilkan kata sandi" aria-pressed="false">' + ic('eye', 'sm') + '</button>';
+  ACT['pw-toggle'] = el => { const i = el.parentElement.querySelector('input'); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; el.setAttribute('aria-pressed', String(show)); el.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'); el.classList.toggle('on', show); i.focus(); };
+  /* ================= TEKS BERFORMAT (Markdown ringan & aman) =================
+   * **tebal**  *miring*  ~~coret~~  ==sorot==  `kode`  [teks](https://link)
+   * # Judul  ## Subjudul  - poin / * poin  1. urutan  - [x] centang  > kutipan  ---  | tabel | */
+  function mdInline(s) {
+    return s.replace(/`([^`\n]+)`/g, '<code>$1</code>')
+      .replace(/\*\*(?=\S)([\s\S]*?\S)\*\*/g, '<strong>$1</strong>')
+      .replace(/__(?=\S)([\s\S]*?\S)__/g, '<strong>$1</strong>')
+      .replace(/(^|[\s(>])\*(?=\S)([^*\n]*?\S)\*(?=[\s).,!?:;<]|$)/g, '$1<em>$2</em>')
+      .replace(/(^|[\s(>])_(?=\S)([^_\n]*?\S)_(?=[\s).,!?:;<]|$)/g, '$1<em>$2</em>')
+      .replace(/~~(?=\S)([^~\n]*?\S)~~/g, '<del>$1</del>')
+      .replace(/==(?=\S)([^=\n]*?\S)==/g, '<mark>$1</mark>')
+      .replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)<]+)\)/g, '<a href="$2" target="_blank" rel="noopener nofollow">$1</a>');
+  }
+  function md(src) {
+    const L = String(src || '').replace(/\r/g, '').split('\n'), out = []; let i = 0;
+    const isTbl = l => /^\s*\|.*\|\s*$/.test(l), isSep = l => /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(l);
+    const cells = l => l.trim().replace(/^\||\|$/g, '').split('|').map(x => mdInline(esc(x.trim())));
+    const UL = /^\s*[-*•+]\s+(.*)$/, OL = /^\s*(\d+)[.)]\s+(.*)$/;
+    while (i < L.length) {
+      const l = L[i];
+      if (!l.trim()) { i++; continue; }
+      let m;
+      if ((m = l.match(/^\s*(#{1,3})\s+(.*)$/))) { const n = m[1].length; out.push('<h' + (n + 2) + ' class="md-h' + n + '">' + mdInline(esc(m[2])) + '</h' + (n + 2) + '>'); i++; continue; }
+      if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) { out.push('<hr>'); i++; continue; }
+      if (isTbl(l) && i + 1 < L.length && isSep(L[i + 1])) {
+        const h = cells(l); i += 2; const rows = [];
+        while (i < L.length && isTbl(L[i])) rows.push(cells(L[i++]));
+        out.push('<div class="md-tw"><table><thead><tr>' + h.map(x => '<th>' + x + '</th>').join('') + '</tr></thead><tbody>' + rows.map(r => '<tr>' + h.map((x, k) => '<td>' + (r[k] || '') + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>'); continue;
+      }
+      if (/^\s*>/.test(l)) { const q = []; while (i < L.length && /^\s*>/.test(L[i])) q.push(L[i++].replace(/^\s*>\s?/, '')); out.push('<blockquote>' + q.map(x => mdInline(esc(x))).join('<br>') + '</blockquote>'); continue; }
+      if (UL.test(l) || OL.test(l)) {
+        const ord = !UL.test(l), items = [];
+        while (i < L.length && (ord ? OL.test(L[i]) : UL.test(L[i]))) {
+          let t = L[i].match(ord ? OL : UL)[ord ? 2 : 1], ck = null;
+          const cm = t.match(/^\[([ xX])\]\s+(.*)$/); if (cm) { ck = cm[1] !== ' '; t = cm[2]; }
+          let body = mdInline(esc(t)); i++;
+          while (i < L.length && /^\s{2,}\S/.test(L[i]) && !UL.test(L[i]) && !OL.test(L[i])) body += '<br>' + mdInline(esc(L[i++].trim()));
+          items.push(ck === null ? '<li>' + body + '</li>' : '<li class="ck' + (ck ? ' on' : '') + '">' + body + '</li>');
+          if (i < L.length && !L[i].trim() && i + 1 < L.length && (ord ? OL.test(L[i + 1]) : UL.test(L[i + 1]))) i++;
+        }
+        const start = ord ? +(l.match(OL)[1]) : 1;
+        out.push(ord ? '<ol' + (start > 1 ? ' start="' + start + '" style="counter-reset:md ' + (start - 1) + '"' : '') + '>' + items.join('') + '</ol>' : '<ul' + (items.some(x => x.indexOf('class="ck') > -1) ? ' class="md-ck"' : '') + '>' + items.join('') + '</ul>'); continue;
+      }
+      const p = []; while (i < L.length && L[i].trim() && !/^\s*(#{1,3}\s|>|[-*•+]\s|\d+[.)]\s)/.test(L[i]) && !(isTbl(L[i]) && isSep(L[i + 1] || '')) && !/^\s*([-*_])(\s*\1){2,}\s*$/.test(L[i])) p.push(L[i++]);
+      if (!p.length) { out.push('<p>' + mdInline(esc(L[i++])) + '</p>'); continue; }
+      out.push('<p>' + p.map(x => mdInline(esc(x))).join('<br>') + '</p>');
+    }
+    return '<div class="md">' + out.join('') + '</div>';
+  }
+  /** Teks polos dari Markdown (kartu katalog, ringkasan) */
+  function mdPlain(src, max) {
+    let t = String(src || '').replace(/\r/g, '').replace(/^\s*\|?\s*:?-{2,}.*$/gm, '').replace(/^\s*#{1,3}\s+/gm, '').replace(/^\s*>\s?/gm, '').replace(/^\s*[-*•+]\s+(\[[ xX]\]\s+)?/gm, '• ').replace(/\|/g, ' ').replace(/\*\*|__|~~|==|`/g, '').replace(/(^|\s)[*_](\S[^*_\n]*?)[*_](?=\s|$|[.,!?])/g, '$1$2').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/^\s*([-*_])(\s*\1){2,}\s*$/gm, '').replace(/\n{2,}/g, '\n').replace(/[ \t]+/g, ' ').trim();
+    if (max && t.length > max) t = t.slice(0, max).replace(/\s+\S*$/, '') + '…';
+    return t;
+  }
+
   /* Tabel → kartu di HP: salin judul kolom ke setiap sel (data-l) */
   function labelTables(root) { (root || document).querySelectorAll('table.t').forEach(t => { const hs = [...t.querySelectorAll('thead th')].map(th => th.textContent.trim()); if (!hs.length) return; t.querySelectorAll('tbody tr').forEach(tr => [...tr.children].forEach((td, i) => { if (hs[i] && !td.hasAttribute('data-l')) td.setAttribute('data-l', hs[i]); })); }); }
   let ltRaf = 0; const ltObs = new MutationObserver(() => { if (!ltRaf) ltRaf = requestAnimationFrame(() => { ltRaf = 0; labelTables(); }); });
@@ -492,5 +554,5 @@
   function pageNotFound() { return '<div class="wrap-c sec center"><h1 class="h1">404</h1><p class="muted mt">Halaman tidak ditemukan.</p><a class="btn pri mt" href="#/">Ke Beranda</a></div>'; }
   route(/^\/404$/, { layout: 'pub', title: 'Tidak ditemukan', render: pageNotFound });
 
-  w.NK = { loadApp2, asset, imgField, imgSet, shareUrl, onData, S, $, $$, esc, rp, num, dt, tm, dtm, ago, hash, uid, clone, debounce, idle, safeUrl, initials, num62, waLink, ytEmbed, pdfEmbed, dlUrl, driveId, copy, download, csvCell, parseCSV, ic, ICONS, api, use, sget, sset, stale, optimistic, patchData, refreshDeps, prefetch, revalidate, emit, hasEntry, toast, modal, closeModal, modalOpen, confirmBox, busy, ACT, FORM, INPUT, route, go, renderRoute, softRender, chromeUpdate, pubData, usePub, setting, appName, bootData, admData, isAdmin, jsonSetting, applySession, logout, readFile, mountGoogle, start, brandHTML, srcOf, DEFAULT_PUB, saveSession, TZ };
+  w.NK = { md, mdPlain, pwEye, loadApp2, asset, imgField, imgSet, shareUrl, onData, S, $, $$, esc, rp, num, dt, tm, dtm, ago, hash, uid, clone, debounce, idle, safeUrl, initials, num62, waLink, ytEmbed, pdfEmbed, dlUrl, driveId, copy, download, csvCell, parseCSV, ic, ICONS, api, use, sget, sset, stale, optimistic, patchData, refreshDeps, prefetch, revalidate, emit, hasEntry, toast, modal, closeModal, modalOpen, confirmBox, busy, ACT, FORM, INPUT, route, go, renderRoute, softRender, chromeUpdate, pubData, usePub, setting, appName, bootData, admData, isAdmin, jsonSetting, applySession, logout, readFile, mountGoogle, start, brandHTML, srcOf, DEFAULT_PUB, saveSession, TZ };
 })(window);

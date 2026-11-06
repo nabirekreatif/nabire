@@ -137,7 +137,7 @@
 
   /* ---------- CRUD konten generik ---------- */
   const SPEC = {
-    Products: { label: 'Produk', f: [['tipe', 'Jenis', 'select', [['digital', 'Produk Digital'], ['kelas', 'Kelas Online']]], ['judul', 'Judul *', 'text'], ['deskripsi', 'Deskripsi', 'area'], ['label', 'Label singkat', 'text', null, 'Contoh: Siap pakai tanpa software berbayar'], ['harga', 'Harga (Rp) *', 'num'], ['harga_coret', 'Harga coret (Rp)', 'num', null, 'Opsional, untuk tampilan diskon'], ['cover_url', 'Foto sampul', 'img', null, 'Unggah foto langsung dari HP/komputer. Rasio 16:9 paling rapi.'], ['galeri', 'Foto tambahan (galeri, maks 8)', 'imgs', null, 'Tampil sebagai slider di halaman produk; pengunjung bisa memperbesar tiap foto. Atur urutan dengan tombol panah.'], ['link_demo', 'Link demo (opsional)', 'url', null, 'Munculkan tombol “Lihat Demo”, mis. untuk template web atau aplikasi.'], ['grup_wa', 'Link grup WhatsApp pembeli (opsional)', 'url', null, 'Hanya terlihat oleh member yang sudah memiliki produk ini. Contoh: https://chat.whatsapp.com/…'], ['link_bayar', 'Link pembayaran luar (opsional)', 'url', null, 'Contoh link Lynk.id — tombol bayar eksternal'], ['link_unduh', 'Link produk (hanya terlihat pemilik)', 'url', null, 'Digital: link Drive/unduhan. Kelas: tidak perlu — video diisi di menu Pelajaran'], ['tipe_file', 'Cara menampilkan', 'select', [['link', 'Buka / unduh lewat link'], ['pdf', 'PDF — baca langsung di web'], ['linkbio', 'Link Bio — member mengedit halamannya sendiri'], ['template', 'Template Web — berlisensi per domain (kode akses)']]], ['maks_domain', 'Batas domain per lisensi', 'num', null, 'Khusus Template Web: berapa domain yang boleh memakai satu kode. Kosong = bawaan dari menu Lisensi. Isi link unduh Google Drive pada “Link produk” di atas.'], ['badge', 'Lencana', 'text', null, 'Contoh: Terlaris, Hemat 50%'], ['urutan', 'Urutan tampil', 'num'], ['aktif', 'Tampil di katalog', 'yn']] },
+    Products: { label: 'Produk', f: [['tipe', 'Jenis', 'select', [['digital', 'Produk Digital'], ['kelas', 'Kelas Online']]], ['judul', 'Judul *', 'text'], ['deskripsi', 'Deskripsi produk', 'md', null, 'Gunakan toolbar untuk tebal, judul, daftar poin/urutan, centang, tabel, kutipan. Deskripsi panjang otomatis diberi tombol “Baca selengkapnya”.'], ['label', 'Label singkat', 'text', null, 'Contoh: Siap pakai tanpa software berbayar'], ['harga', 'Harga (Rp) *', 'num'], ['harga_coret', 'Harga coret (Rp)', 'num', null, 'Opsional, untuk tampilan diskon'], ['cover_url', 'Foto sampul', 'img', null, 'Unggah foto langsung dari HP/komputer. Rasio 16:9 paling rapi.'], ['galeri', 'Foto tambahan (galeri, maks 8)', 'imgs', null, 'Tampil sebagai slider di halaman produk; pengunjung bisa memperbesar tiap foto. Atur urutan dengan tombol panah.'], ['link_demo', 'Link demo (opsional)', 'url', null, 'Munculkan tombol “Lihat Demo”, mis. untuk template web atau aplikasi.'], ['grup_wa', 'Link grup WhatsApp pembeli (opsional)', 'url', null, 'Hanya terlihat oleh member yang sudah memiliki produk ini. Contoh: https://chat.whatsapp.com/…'], ['link_bayar', 'Link pembayaran luar (opsional)', 'url', null, 'Contoh link Lynk.id — tombol bayar eksternal'], ['link_unduh', 'Link produk (hanya terlihat pemilik)', 'url', null, 'Digital: link Drive/unduhan. Kelas: tidak perlu — video diisi di menu Pelajaran'], ['tipe_file', 'Cara menampilkan', 'select', [['link', 'Buka / unduh lewat link'], ['pdf', 'PDF — baca langsung di web'], ['linkbio', 'Link Bio — member mengedit halamannya sendiri'], ['template', 'Template Web — berlisensi per domain (kode akses)']]], ['maks_domain', 'Batas domain per lisensi', 'num', null, 'Khusus Template Web: berapa domain yang boleh memakai satu kode. Kosong = bawaan dari menu Lisensi. Isi link unduh Google Drive pada “Link produk” di atas.'], ['badge', 'Lencana', 'text', null, 'Contoh: Terlaris, Hemat 50%'], ['urutan', 'Urutan tampil', 'num'], ['aktif', 'Tampil di katalog', 'yn']] },
     Lessons: { label: 'Pelajaran', f: [['judul', 'Judul pelajaran *', 'text'], ['link_youtube', 'Link YouTube *', 'url', null, 'Tempel link video YouTube (boleh Unlisted)'], ['durasi', 'Durasi', 'text', null, 'Contoh: 14:20'], ['urutan', 'Urutan', 'num'], ['deskripsi', 'Deskripsi', 'area'], ['aktif', 'Aktif', 'yn']] },
     Demos: { label: 'Karya Demo', f: [['judul', 'Judul *', 'text'], ['kategori', 'Kategori / klien', 'text', null, 'Contoh: Aplikasi Web · Klien: Kopi Moanemani'], ['deskripsi', 'Deskripsi', 'area'], ['link_demo', 'Link demo (web)', 'url', null, 'Alamat website / aplikasi demo, akan dibuka di tab baru'], ['cover_url', 'Foto sampul', 'img', null, 'Tangkapan layar demo. Rasio 16:9 paling rapi.'], ['badge', 'Lencana', 'text', null, 'Contoh: Live Demo'], ['urutan', 'Urutan', 'num'], ['aktif', 'Tampil', 'yn']] },
     Services: { label: 'Layanan', f: [['nama', 'Nama layanan *', 'text'], ['kategori', 'Kategori', 'select', [['Website', 'Website'], ['Aplikasi', 'Aplikasi (kartu lebar)']]], ['deskripsi', 'Deskripsi', 'area'], ['harga_mulai', 'Harga mulai (Rp)', 'num'], ['fitur', 'Fitur unggulan', 'area', null, 'Pisahkan dengan tanda | — contoh: Desain mobile-first|Tombol WhatsApp'], ['urutan', 'Urutan', 'num'], ['aktif', 'Tampil', 'yn']] },
@@ -146,7 +146,8 @@
   function fieldH(f, v) {
     const k = f[0], l = f[1], t = f[2], id = 'cf-' + k, val = v == null ? '' : v, hint = f[4] ? '<div class="hint">' + esc(f[4]) + '</div>' : '';
     let inp;
-    if (t === 'area') inp = '<textarea class="in" id="' + id + '" name="' + k + '">' + esc(val) + '</textarea>';
+    if (t === 'md') inp = mdEd(id, k, val);
+    else if (t === 'area') inp = '<textarea class="in" id="' + id + '" name="' + k + '">' + esc(val) + '</textarea>';
     else if (t === 'select') inp = '<select class="in" id="' + id + '" name="' + k + '">' + f[3].map(o => '<option value="' + esc(o[0]) + '" ' + (String(val) === o[0] ? 'selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>';
     else if (t === 'yn') inp = '<select class="in" id="' + id + '" name="' + k + '"><option value="YA" ' + (val !== 'TIDAK' ? 'selected' : '') + '>Ya</option><option value="TIDAK" ' + (val === 'TIDAK' ? 'selected' : '') + '>Tidak</option></select>';
     else if (t === 'imgs') inp = galH(k, val);
@@ -155,6 +156,54 @@
     else inp = '<input class="in" id="' + id + '" name="' + k + '" ' + (t === 'url' ? 'inputmode="url" autocapitalize="off" spellcheck="false" ' : '') + 'value="' + esc(val) + '">';
     return '<div class="fg"><label class="fl" for="' + id + '">' + esc(l) + '</label>' + inp + hint + '</div>';
   }
+  /* ---------- editor deskripsi berformat (Markdown ringan + pratinjau) ---------- */
+  const MDB = [['b', 'B', 'Tebal (Ctrl+B)'], ['i', 'I', 'Miring (Ctrl+I)'], ['s', 'S', 'Coret'], ['m', 'Sorot', 'Sorot/stabilo'], ['|'], ['h2', 'H', 'Judul bagian'], ['h3', 'h', 'Subjudul'], ['|'], ['ul', '•', 'Daftar poin'], ['ol', '1.', 'Daftar berurutan'], ['ck', '☑', 'Daftar centang'], ['|'], ['q', '❝', 'Kutipan / catatan'], ['tb', '▦', 'Tabel'], ['hr', '—', 'Garis pemisah'], ['ln', '🔗', 'Tautan']];
+  function mdEd(id, k, val) {
+    return '<div class="mde" data-id="' + id + '"><div class="mde-tb" role="toolbar" aria-label="Format teks">' + MDB.map(b => b[0] === '|' ? '<i class="mde-sep"></i>' : '<button type="button" class="mde-b mde-' + b[0] + '" data-act="mdx" data-x="' + b[0] + '" title="' + esc(b[2]) + '" aria-label="' + esc(b[2]) + '">' + esc(b[1]) + '</button>').join('') + '<span class="grow"></span><div class="mde-tab"><button type="button" class="on" data-act="mdv" data-v="e">Tulis</button><button type="button" data-act="mdv" data-v="p">Pratinjau</button></div></div>' +
+      '<textarea class="in mde-ta" id="' + id + '" name="' + k + '" rows="12" placeholder="Contoh:\n## Fitur utama\n* Link bio interaktif: profil, promo, sosial media\n* Katalog produk dengan **pencarian** dan filter\n\n| Paket | Harga |\n| --- | --- |\n| Basic | Rp 99.000 |">' + esc(val) + '</textarea><div class="mde-pv hide"></div><div class="mde-ft"><span class="mde-n">' + String(val || '').length + ' karakter</span><span>**tebal** · *miring* · ## judul · * poin · 1. urutan · | tabel |</span></div></div>';
+  }
+  function mdWrap(ta, a, b, ph) {
+    const s0 = ta.selectionStart, s1 = ta.selectionEnd, v = ta.value, sel = v.slice(s0, s1) || ph;
+    ta.value = v.slice(0, s0) + a + sel + b + v.slice(s1); ta.focus(); ta.setSelectionRange(s0 + a.length, s0 + a.length + sel.length);
+  }
+  function mdLines(ta, fn) {
+    const v = ta.value, s0 = v.lastIndexOf('\n', ta.selectionStart - 1) + 1; let s1 = v.indexOf('\n', ta.selectionEnd); if (s1 < 0) s1 = v.length;
+    const ls = v.slice(s0, s1).split('\n'), out = ls.map(fn).join('\n');
+    ta.value = v.slice(0, s0) + out + v.slice(s1); ta.focus(); ta.setSelectionRange(s0, s0 + out.length);
+  }
+  function mdInsert(ta, txt) { const v = ta.value; let s0 = v.indexOf('\n', ta.selectionEnd); if (s0 < 0) s0 = v.length; const pre = s0 > 0 ? '\n\n' : '', post = s0 < v.length ? '\n' : ''; ta.value = v.slice(0, s0) + pre + txt + post + v.slice(s0); ta.focus(); const p = s0 + pre.length + txt.length; ta.setSelectionRange(p, p); }
+  const strip = l => l.replace(/^\s*(#{1,3}\s+|[-*•+]\s+(\[[ xX]\]\s+)?|\d+[.)]\s+|>\s?)/, '');
+  ACT['mdx'] = el => {
+    const box = el.closest('.mde'), ta = box.querySelector('textarea'), x = el.getAttribute('data-x');
+    if (!ta.closest('.mde').querySelector('.mde-pv').classList.contains('hide')) ACT['mdv']({ getAttribute: () => 'e', closest: () => box });
+    if (x === 'b') mdWrap(ta, '**', '**', 'teks tebal'); else if (x === 'i') mdWrap(ta, '*', '*', 'teks miring'); else if (x === 's') mdWrap(ta, '~~', '~~', 'teks coret'); else if (x === 'm') mdWrap(ta, '==', '==', 'teks penting');
+    else if (x === 'h2') mdLines(ta, l => '## ' + strip(l)); else if (x === 'h3') mdLines(ta, l => '### ' + strip(l));
+    else if (x === 'ul') mdLines(ta, l => l.trim() ? '* ' + strip(l) : l); else if (x === 'ck') mdLines(ta, l => l.trim() ? '- [ ] ' + strip(l) : l); else if (x === 'q') mdLines(ta, l => '> ' + strip(l));
+    else if (x === 'ol') { let n = 0; mdLines(ta, l => l.trim() ? (++n) + '. ' + strip(l) : l); }
+    else if (x === 'tb') mdInsert(ta, '| Kolom 1 | Kolom 2 |\n| --- | --- |\n| Isi | Isi |\n| Isi | Isi |\n');
+    else if (x === 'hr') mdInsert(ta, '---\n');
+    else if (x === 'ln') { const u = prompt('Alamat tautan (https://…)', 'https://'); if (u && /^https?:\/\/\S+$/.test(u)) mdWrap(ta, '[', '](' + u + ')', 'teks tautan'); }
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  ACT['mdv'] = el => {
+    const box = el.closest('.mde'), v = el.getAttribute('data-v'), ta = box.querySelector('textarea'), pv = box.querySelector('.mde-pv');
+    box.querySelectorAll('.mde-tab button').forEach(b => b.classList.toggle('on', b.getAttribute('data-v') === v));
+    if (v === 'p') { pv.innerHTML = String(ta.value).trim() ? N.md(ta.value) : '<p class="muted">Belum ada deskripsi.</p>'; pv.style.minHeight = ta.offsetHeight + 'px'; }
+    pv.classList.toggle('hide', v !== 'p'); ta.classList.toggle('hide', v === 'p');
+  };
+  document.addEventListener('input', e => { const ta = e.target; if (ta && ta.classList && ta.classList.contains('mde-ta')) { const n = ta.closest('.mde').querySelector('.mde-n'); if (n) n.textContent = ta.value.length + ' karakter'; } });
+  document.addEventListener('keydown', e => {
+    const ta = e.target; if (!ta || !ta.classList || !ta.classList.contains('mde-ta')) return;
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'i')) { e.preventDefault(); ACT['mdx'](ta.closest('.mde').querySelector('.mde-' + e.key)); return; }
+    if (e.key === 'Enter' && !e.shiftKey) { /* lanjutkan daftar otomatis */
+      const v = ta.value, s = ta.selectionStart, ls = v.lastIndexOf('\n', s - 1) + 1, line = v.slice(ls, s), m = line.match(/^(\s*)([-*•+]\s+(\[[ xX]\]\s+)?|(\d+)([.)])\s+)(.*)$/);
+      if (!m) return; e.preventDefault();
+      if (!m[6].trim()) { ta.value = v.slice(0, ls) + v.slice(s); ta.setSelectionRange(ls, ls); return; }
+      const next = m[4] ? (+m[4] + 1) + m[5] + ' ' : m[2].replace(/\[[xX]\]/, '[ ]');
+      const ins = '\n' + m[1] + next; ta.value = v.slice(0, s) + ins + v.slice(ta.selectionEnd); ta.setSelectionRange(s + ins.length, s + ins.length);
+    }
+  });
+
   /* ---------- galeri multi-foto (produk) ---------- */
   const GAL_MAX = 8;
   const galArr = v => { if (Array.isArray(v)) return v.slice(); try { const a = JSON.parse(v || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
@@ -188,7 +237,7 @@
   function openForm(sheet, id, preset, back) {
     const spec = SPEC[sheet], list = N.sget('u', 'c:' + sheet), row = id && list ? list.v.find(r => r.id === id) : null, v = row || Object.assign({ aktif: 'YA', tampil: 'YA', urutan: (list ? list.v.length : 0) + 1, rating: 5, tipe: 'digital', tipe_file: 'link', kategori: sheet === 'Services' ? 'Website' : '' }, preset || {});
     Object.assign(CRUD, { sheet: sheet, id: id || '', back: back || null });
-    N.modal({ title: (id ? 'Ubah ' : 'Tambah ') + spec.label, cls: 'wide', onClose: () => { if (CRUD.back) { const b = CRUD.back; CRUD.back = null; b(); } }, body: '<form id="crud" data-form="crud" novalidate><div class="grid2">' + spec.f.map(f => (f[2] === 'area' || f[0] === 'judul' || f[0] === 'nama' || f[0] === 'link_unduh' || f[0] === 'link_bayar' || f[0] === 'cover_url' || f[0] === 'foto_url' || f[0] === 'link_youtube' || f[0] === 'galeri' || f[0] === 'link_demo' || f[0] === 'grup_wa') ? '</div>' + fieldH(f, v[f[0]]) + '<div class="grid2">' : fieldH(f, v[f[0]])).join('') + '</div></form>', foot: '<button class="btn ghost" data-act="modal-close">Batal</button><button class="btn pri" type="submit" form="crud">' + ic('check', 'sm') + 'Simpan</button>' });
+    N.modal({ title: (id ? 'Ubah ' : 'Tambah ') + spec.label, cls: 'wide', onClose: () => { if (CRUD.back) { const b = CRUD.back; CRUD.back = null; b(); } }, body: '<form id="crud" data-form="crud" novalidate><div class="grid2">' + spec.f.map(f => (f[2] === 'area' || f[0] === 'judul' || f[0] === 'nama' || f[0] === 'link_unduh' || f[0] === 'link_bayar' || f[0] === 'cover_url' || f[0] === 'foto_url' || f[0] === 'link_youtube' || f[0] === 'galeri' || f[0] === 'link_demo' || f[0] === 'grup_wa' || f[2] === 'md') ? '</div>' + fieldH(f, v[f[0]]) + '<div class="grid2">' : fieldH(f, v[f[0]])).join('') + '</div></form>', foot: '<button class="btn ghost" data-act="modal-close">Batal</button><button class="btn pri" type="submit" form="crud">' + ic('check', 'sm') + 'Simpan</button>' });
   }
   FORM.crud = async f => {
     const d = Object.fromEntries(new FormData(f).entries()), sheet = CRUD.sheet, id = CRUD.id, back = CRUD.back; CRUD.back = null;

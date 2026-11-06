@@ -16,7 +16,7 @@ const srv = http.createServer((q, s) => { let p = q.url.split('?')[0]; if (p ===
     const app = document.getElementById('app').cloneNode(true), view = app.querySelector('#view');
     const hero = view.querySelector('section.hero'); view.innerHTML = ''; if (hero) view.appendChild(hero);
     app.querySelectorAll('[style*="transition-delay"]').forEach(e => e.style.transitionDelay = '');
-    app.querySelectorAll('.rv,.in').forEach(e => e.classList.remove('rv', 'in'));
+    app.querySelectorAll('.rv,.rv-on').forEach(e => e.classList.remove('rv', 'rv-on'));
     app.querySelectorAll('footer, .ft').forEach(e => e.remove()); const bn = app.querySelector('#banner'); if (bn) bn.innerHTML = '';
     const html = app.innerHTML.replace(/\s+style=""/g, '');
     const x = Array.from(app.childNodes).map(n => new XMLSerializer().serializeToString(n)).join('').replace(/ xmlns="http:\/\/www\.w3\.org\/1999\/xhtml"/g, '').replace(/\s+style=""/g, '');
