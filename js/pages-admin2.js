@@ -178,4 +178,51 @@
     if (!dry) { ['members', 'codes', 'c:Products', 'crmstats', 'adm'].forEach(k => N.stale('u', k)); N.stale('pub', 'pub'); N.revalidate('pub', 'pub', {}); }
     N.softRender();
   };
+
+  /* =============================== INTEGRASI LYNK.ID =============================== */
+  const LY = { email: '', pid: '' };
+  const lyUrl = t => { const g = String((w.NK_CONFIG || {}).GAS_URL || ''); return g && t ? g + (g.indexOf('?') > -1 ? '&' : '?') + 'lynk=' + t : ''; };
+  const lyPill = s => s === 'TERKIRIM' ? '<span class="pill ok">Terkirim</span>' : s === 'PERLU_CEK' ? '<span class="pill warn">Perlu dicek</span>' : '<span class="pill">Dilewati</span>';
+  const lyProds = () => (use('c:Products', { ttl: 60000 }) || []).filter(p => p.aktif !== 'TIDAK');
+  route(/^\/admin\/lynk$/, adm({
+    title: 'Integrasi Lynk.id',
+    render() {
+      const d = use('lynk', { ttl: 15000 }), prods = lyProds();
+      const hd = head('Pembayaran otomatis', 'Integrasi Lynk.id', 'Setiap pembelian lunas di Lynk.id otomatis membuat <b>Kode Akses</b> dan mengirimkannya ke Gmail pembeli. Bila email pembeli sudah punya akun member, akses langsung terbuka.', '<button class="btn soft sm" data-act="ly-refresh">' + ic('refresh', 'sm') + 'Muat ulang</button>');
+      if (!d) return hd + skelBox(260);
+      const url = lyUrl(d.token), st = d.stat || {};
+      const langkah = (n, judul, isi) => '<div class="row" style="align-items:flex-start;gap:12px;margin-top:14px"><span class="stepn" style="flex:none;width:30px;height:30px;border-radius:9px;font-size:14px">' + n + '</span><div style="flex:1;min-width:0"><b>' + judul + '</b><div class="small muted" style="margin-top:4px">' + isi + '</div></div></div>';
+      const setup = '<div class="card"><h3>Cara menyambungkan</h3>' +
+        langkah(1, 'Buat token webhook', d.token ? 'Token sudah dibuat. <button class="btn ghost xs" data-act="ly-token">' + ic('refresh', 'sm') + 'Buat ulang</button> <span class="tiny">(URL lama otomatis tidak berlaku)</span>' : '<button class="btn pri sm" data-act="ly-token" style="margin-top:6px">' + ic('key', 'sm') + 'Buat Token Webhook</button>') +
+        langkah(2, 'Salin URL webhook', url ? '<div class="row" style="margin-top:6px;gap:8px"><input class="in mono" readonly value="' + esc(url) + '" style="font-size:12px;min-width:0;flex:1" aria-label="URL webhook"><button class="btn nav sm" data-act="ly-copy">' + ic('copy', 'sm') + 'Salin</button></div><div class="tiny" style="margin-top:4px">Rahasiakan URL ini. Siapa pun yang memegangnya bisa memicu pembuatan kode.</div>' : (d.token ? 'GAS_URL belum diisi di konfigurasi situs.' : 'Muncul setelah token dibuat.')) +
+        langkah(3, 'Tempel di Lynk.id', 'Buka <b>lynk.id</b> → <b>Settings</b> → <b>Integrations</b> → <b>Webhooks</b>, tempel URL, lalu klik <b>Save URL</b>. Merchant Key yang muncul tidak perlu diisi di sini.') +
+        langkah(4, 'Cocokkan nama produk', 'Di <a href="#/admin/produk" style="color:var(--navy);font-weight:700">Produk &amp; Kelas</a>, isi kolom <b>Nama produk di Lynk.id</b> dengan judul produk persis seperti di Lynk.id.' + (d.tanpaRef && d.tanpaRef.length ? '<div class="pill warn" style="margin-top:6px;white-space:normal">Belum diisi: ' + esc(d.tanpaRef.slice(0, 6).join(', ')) + (d.tanpaRef.length > 6 ? ' +' + (d.tanpaRef.length - 6) : '') + '</div>' : '<div class="pill ok" style="margin-top:6px">Semua produk aktif sudah diisi</div>')) +
+        langkah(5, 'Uji coba', 'Kirim transaksi contoh ke email Anda untuk melihat email yang diterima pembeli.<form class="row wrap" data-form="ly-test" style="margin-top:8px;gap:8px"><select class="in" name="productId" style="flex:1;min-width:min(100%,200px)"><option value="">Pilih produk…</option>' + prods.map(p => '<option value="' + esc(p.id) + '">' + esc(p.judul) + '</option>').join('') + '</select><input class="in" name="email" type="email" placeholder="email@gmail.com" style="flex:1;min-width:min(100%,200px)" value="' + esc(LY.email || (N.S.session && N.S.session.email) || '') + '"><button class="btn soft sm">' + ic('zap', 'sm') + 'Kirim Uji Coba</button></form>') +
+        (d.appUrl ? '' : '<div class="pill warn" style="margin-top:14px;white-space:normal">Alamat situs belum tersimpan, jadi link klaim di email belum bisa dibuat. Masuk sebagai superadmin dari situs utama sekali agar terisi otomatis.</div>') + '</div>';
+      const kp = '<div class="g3" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));margin-top:16px">' + kpi('Kode terkirim', 'check', st.TERKIRIM || 0, 'otomatis ke Gmail pembeli') + kpi('Perlu dicek', 'alert', st.PERLU_CEK || 0, st.PERLU_CEK ? 'klik Proses Ulang di bawah' : 'semua beres') + kpi('Dilewati', 'clock', st.DILEWATI || 0, 'transaksi belum lunas') + '</div>';
+      const rows = d.logs || [];
+      const tbl = '<div class="card mt" style="margin-top:16px"><h3>Riwayat webhook</h3><p class="small muted">Transaksi dari Lynk.id tercatat di sini. Status <b>Perlu dicek</b> berarti produk atau email tidak terbaca. Klik <b>Proses Ulang</b> untuk memilih produk lalu mengirim kodenya.</p>' +
+        (rows.length ? '<div class="tw mt"><table class="t"><thead><tr><th>Waktu</th><th>Pembeli</th><th>Produk di Lynk.id</th><th>Kode</th><th>Status</th><th></th></tr></thead><tbody>' + rows.map(r => '<tr><td data-l="Waktu" class="small">' + esc(N.dtm ? N.dtm(r.waktu) : r.waktu) + '<div class="tiny mono muted">' + esc(r.ref) + '</div></td><td data-l="Pembeli"><b>' + esc(r.nama || '-') + '</b><div class="sub">' + esc(r.email || 'email tidak terbaca') + '</div></td><td data-l="Produk" class="small">' + esc(r.item || '-') + (r.produk ? '<div class="sub">→ ' + esc(r.produk) + '</div>' : '') + '</td><td data-l="Kode" class="mono small">' + esc(String(r.kode || '-').replace(/,/g, ', ')) + '</td><td data-l="Status">' + lyPill(r.status) + '<div class="tiny muted" style="max-width:240px">' + esc(r.catatan || '') + '</div></td><td>' + (r.status !== 'TERKIRIM' ? '<button class="btn pri xs" data-act="ly-retry" data-id="' + esc(r.id) + '">' + ic('refresh', 'sm') + 'Proses Ulang</button>' : '') + '</td></tr>').join('') + '</tbody></table></div>' : empty('zap', 'Belum ada transaksi dari Lynk.id. Setelah URL webhook disimpan di Lynk.id, pembelian baru akan muncul di sini.')) + '</div>';
+      return hd + setup + kp + tbl;
+    }
+  }));
+  const lySet = r => { if (r && r.data && r.data.logs) { N.sset('u', 'lynk', r.data); N.emit('ulynk'); } };
+  ACT['ly-refresh'] = () => { N.revalidate('u', 'lynk', { force: true }); };
+  ACT['ly-token'] = async el => {
+    const cur = N.sget('u', 'lynk'); if (cur && cur.v && cur.v.token && !await N.confirmBox('Buat token baru? URL webhook lama berhenti bekerja dan harus diganti di Lynk.id.', { danger: true, ok: 'Buat Ulang' })) return;
+    N.busy(el, true); const r = await api('lynk.token', {}); N.busy(el, false); if (!r.success) return toast(r.message, 'err'); lySet(r); toast(r.message, 'ok');
+  };
+  ACT['ly-copy'] = () => { const d = N.sget('u', 'lynk'); if (d && d.v) N.copy(lyUrl(d.v.token), 'URL webhook disalin'); };
+  FORM['ly-test'] = async f => {
+    const d = Object.fromEntries(new FormData(f).entries()); if (!d.productId) return toast('Pilih produk untuk uji coba.', 'err'); LY.email = d.email;
+    const b = f.querySelector('button'); N.busy(b, true); const r = await api('lynk.test', d); N.busy(b, false); lySet(r); toast(r.message, r.success ? 'ok' : 'err', 6000);
+  };
+  ACT['ly-retry'] = el => {
+    const d = N.sget('u', 'lynk'), r = d && d.v && d.v.logs.find(x => x.id === el.getAttribute('data-id')); if (!r) return;
+    N.modal({ title: 'Proses Ulang Transaksi', body: '<form id="ly-r" data-form="ly-retry"><input type="hidden" name="id" value="' + esc(r.id) + '"><p class="small muted">Produk di Lynk.id: <b>' + esc(r.item || '-') + '</b></p><div class="fg"><label class="fl">Produk yang dikirim</label><select class="in" name="productId"><option value="">Cocokkan otomatis</option>' + lyProds().map(p => '<option value="' + esc(p.id) + '">' + esc(p.judul) + '</option>').join('') + '</select></div><div class="fg"><label class="fl">Email pembeli</label><input class="in" type="email" name="email" value="' + esc(r.email || '') + '" placeholder="email@gmail.com"></div><p class="tiny muted">Kode akses baru dibuat lalu dikirim ke email ini.</p></form>', foot: '<button class="btn ghost" data-act="modal-close">Batal</button><button class="btn pri" type="submit" form="ly-r">' + ic('check', 'sm') + 'Buat & Kirim Kode</button>' });
+  };
+  FORM['ly-retry'] = async f => {
+    const d = Object.fromEntries(new FormData(f).entries()), b = document.querySelector('[form="ly-r"]'); N.busy(b, true); const r = await api('lynk.retry', d); N.busy(b, false);
+    lySet(r); if (!r.success) return toast(r.message, 'err', 6000); N.closeModal(); toast(r.message, 'ok');
+  };
 })(window);

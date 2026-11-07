@@ -138,7 +138,7 @@
   function srcOf(key) {
     const S_ = { pub: ['publicBootstrap', {}], boot: ['memberBootstrap', {}], adm: ['adminBootstrap', {}], orders: ['orders.list', {}], members: ['members.list', {}], reqs: ['requests.list', {}], codes: ['code.list', {}], settings: ['settings.get', {}], backups: ['backup.list', {}], sys: ['system.status', {}], logs: ['logs.list', {}], crmstats: ['crm.stats', {}], 'notif.config': ['notif.config', {}], blasts: ['wa.blastList', {}] };
     if (S_[key]) return S_[key];
-    if (key === 'lic.adm') return ['license.list', {}]; if (key === 'bio.me') return ['bio.get', {}]; if (key === 'bio.adm') return ['bio.list', {}];
+    if (key === 'lic.adm') return ['license.list', {}]; if (key === 'lynk') return ['lynk.info', {}]; if (key === 'bio.me') return ['bio.get', {}]; if (key === 'bio.adm') return ['bio.list', {}];
     if (key.indexOf('bio:') === 0) return ['bio.public', { slug: key.slice(4) }];
     if (key.indexOf('c:') === 0) return ['content.list', { sheet: key.slice(2) }];
     if (key.indexOf('orders:') === 0) return ['orders.list', { status: key.slice(7) }];
@@ -364,7 +364,7 @@
   const SIDE_MEM = [['/saya', 'Beranda Member', 'grid'], ['/saya/kelas', 'Kelas & Materi Saya', 'cap'], ['/saya/aset', 'Aset & Lisensi Digital', 'cloud'], ['/saya/riwayat', 'Riwayat & Invoice', 'receipt'], ['/saya/linkbio', 'Link Bio Saya', 'link'], ['/saya/klaim', 'Klaim Token Baru', 'key'], ['/saya/profil', 'Profil & Keamanan', 'user']];
   const SIDE_ADM = [
     ['Ringkasan', [['/admin', 'Dasbor Admin', 'grid'], ['/admin/statistik', 'Statistik Web', 'chart']]],
-    ['Transaksi', [['/admin/persetujuan', 'Pusat Persetujuan', 'shield', 'pend'], ['/admin/kode', 'Kode Akses', 'key'], ['/admin/jasa', 'Pesanan Jasa', 'mega', 'jasa']]],
+    ['Transaksi', [['/admin/persetujuan', 'Pusat Persetujuan', 'shield', 'pend'], ['/admin/kode', 'Kode Akses', 'key'], ['/admin/lynk', 'Integrasi Lynk.id', 'zap'], ['/admin/jasa', 'Pesanan Jasa', 'mega', 'jasa']]],
     ['Katalog', [['/admin/produk', 'Produk & Kelas', 'box'], ['/admin/galeri', 'Galeri Demo', 'image'], ['/admin/linkbio', 'Link Bio', 'link'], ['/admin/lisensi', 'Lisensi Template', 'shield'], ['/admin/layanan', 'Layanan Jasa', 'tag'], ['/admin/testimoni', 'Testimoni', 'star']]],
     ['Pelanggan', [['/admin/member', 'Daftar Member', 'users'], ['/admin/crm', 'CRM Pelanggan', 'contact'], ['/admin/wa', 'WhatsApp & Notifikasi', 'chat']]],
     ['Sistem', [['/admin/beranda', 'Pengaturan Beranda', 'sliders'], ['/admin/backup', 'Backup Data', 'cloud'], ['/admin/migrasi', 'Migrasi Data', 'upload'], ['/admin/sistem', 'Backend GAS & Basis Data', 'db']]]

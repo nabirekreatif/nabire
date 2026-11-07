@@ -222,9 +222,9 @@
     render(m, q) {
       if (S.session) { return '<div class="wrap-c sec center"><div class="sk" style="height:120px"></div></div>'; }
       const p = (N.pubData().products || []).find(x => x.id === q.get('p'));
-      return '<div class="authw"><div class="auth card"><div class="center"><div class="stepn o" style="margin:0 auto 12px;width:52px;height:52px;border-radius:14px">' + ic('key', 'lg') + '</div><h1 class="h2" style="font-size:24px">Redeem Kode Akses</h1><p class="muted small mt" style="margin-top:6px">Masukkan kode yang Anda terima setelah membeli di Lynk.id' + (p ? ' untuk <b>' + esc(p.judul) + '</b>' : '') + '. 1 kode = 1 produk, sekali pakai.</p></div><form data-form="quick-redeem" class="mt"><div class="fg"><label class="fl" for="rd-k">Kode Akses</label><input class="in mono" id="rd-k" name="kode" placeholder="NK-XXXX-XXXX" autocomplete="off" autocapitalize="characters"></div><button class="btn pri block">' + ic('zap', 'sm') + 'Lanjut — Masuk & Klaim</button></form><p class="tiny muted center mt">Anda perlu akun member (gratis). Akses ditautkan ke akun Anda.</p></div></div>';
+      return '<div class="authw"><div class="auth card"><div class="center"><div class="stepn o" style="margin:0 auto 12px;width:52px;height:52px;border-radius:14px">' + ic('key', 'lg') + '</div><h1 class="h2" style="font-size:24px">Redeem Kode Akses</h1><p class="muted small mt" style="margin-top:6px">Masukkan kode yang Anda terima setelah membeli di Lynk.id' + (p ? ' untuk <b>' + esc(p.judul) + '</b>' : '') + '. 1 kode = 1 produk, sekali pakai.</p></div><form data-form="quick-redeem" class="mt"><div class="fg"><label class="fl" for="rd-k">Kode Akses</label><input class="in mono" id="rd-k" name="kode" placeholder="NK-XXXX-XXXX" autocomplete="off" autocapitalize="characters" value="' + esc(String(q.get('kode') || '').slice(0, 40)) + '"></div><button class="btn pri block">' + ic('zap', 'sm') + 'Lanjut — Masuk & Klaim</button></form><p class="tiny muted center mt">Anda perlu akun member (gratis). Akses ditautkan ke akun Anda.</p></div></div>';
     },
-    mount(root, m, q) { if (S.session) go('/saya/klaim', true); }
+    mount(root, m, q) { const k = String(q.get('kode') || '').trim(); if (S.session) { if (k) SS.set('nk.code', k); go('/saya/klaim', true); } }
   });
 
   /* ---------- AUTH ---------- */

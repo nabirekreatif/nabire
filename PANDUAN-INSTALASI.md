@@ -22,7 +22,8 @@ Deskripsi panjang otomatis diringkas dengan tombol **Baca selengkapnya**.
 - **Beranda** (`/`) = portal Nabire Kreatif (tidak terpengaruh postingan).
 - **Postingan** = artikel Nabire Kreatif dengan tampilan rapi: label, tanggal, tombol bagikan (WhatsApp/Facebook/Telegram), ajakan pesan jasa, artikel sebelumnya/berikutnya. Daftar artikel di `/search`, per label di `/search/label/NamaLabel`, ada kotak cari dan baris label. Tautan "Artikel & Tips" muncul di footer portal.
 - **Halaman** (`/p/...`) = kanvas KOSONG: tanpa header, footer, atau gaya tema. Tempel kode HTML Anda sendiri (mode *Tampilan HTML* di editor halaman) untuk landing page produk tertentu.
-- Komentar Blogger belum ditampilkan di tema ini.
+- Komentar Blogger tampil di bawah artikel bila diaktifkan di setelan postingan.
+- Tema v5.3: susunan tata letak **sama persis dengan tema lama Anda** (bagian *header*, *artikel* berisi gadget **Postingan Blog**, *footer*). Setelah memulihkan tema, buka **Tata Letak**: di bagian *artikel* harus ada kotak **Postingan Blog**. Daftar label artikel kini dibuat otomatis (tanpa gadget Label).
 
 
 ## Pembaruan v5 (November 2026) — langkah singkat
@@ -165,3 +166,25 @@ Menu **Backup** mencantumkan salinan spreadsheet di Drive (folder Backup). Untuk
 - Link unduhan produk terlihat oleh member yang berhak dan bisa dibagikan; untuk file sensitif, atur izin berbagi di Drive.
 - Gambar bukti transfer disimpan privat di Drive; hanya pemilik pesanan dan admin yang dapat melihatnya.
 - Kuota gratis Apps Script: email ±100/hari, waktu eksekusi harian terbatas — cukup untuk ratusan member.
+
+## v5.4 — Integrasi Lynk.id (kode akses otomatis ke Gmail pembeli)
+
+Alur: pembeli bayar di Lynk.id → Lynk.id mengirim *webhook* ke backend → backend membuat **Kode Akses** → email berisi kode + link klaim terkirim ke Gmail pembeli. Bila email pembeli sudah punya akun member, produknya langsung terbuka di akun itu.
+
+**A. Perbarui backend (sekali)**
+1. Buka proyek Apps Script → ganti isi `Kode.gs` dan `Notifikasi.gs` dengan versi baru, lalu tambah file baru `Lynk.gs` (tombol **+** → Skrip, beri nama `Lynk`).
+2. **Terapkan → Kelola deployment → ✏️ Edit → Versi: Versi baru → Terapkan**. URL `/exec` tetap sama.
+3. Sheet `LynkLog` dan kolom `lynk_ref` dibuat otomatis saat backend dipanggil pertama kali.
+
+**B. Sambungkan di dasbor**
+1. Dasbor Admin → **Integrasi Lynk.id** → **Buat Token Webhook** → **Salin** URL webhook.
+2. Di lynk.id: **Settings → Integrations → Webhooks** → tempel URL → **Save URL**.
+3. Dasbor → **Produk & Kelas** → edit tiap produk → isi **Nama produk di Lynk.id** (salin judul persis dari Lynk.id; boleh beberapa nama dipisah koma).
+4. Kembali ke **Integrasi Lynk.id** → **Kirim Uji Coba** ke email Anda untuk melihat email yang diterima pembeli.
+
+**Catatan**
+- Pastikan **WhatsApp & Notifikasi → Email** aktif dan event *Pembelian di Lynk.id* dicentang (bawaan sudah aktif). Teks email bisa diubah di sana.
+- Transaksi yang produk/emailnya tidak terbaca muncul berstatus **Perlu dicek** → klik **Proses Ulang**, pilih produk, lalu kirim.
+- Transaksi yang sama tidak pernah membuat kode dobel. Transaksi belum lunas dilewati.
+- Tombol "Test URL" di Lynk.id bisa menampilkan peringatan karena Apps Script membalas dengan *redirect*; itu normal. Cek tabel **Riwayat webhook** di dasbor: bila baris tes muncul, sambungan sudah berhasil.
+- Kuota email Gmail gratis ± 100 email/hari (Google Workspace ± 1.500).
