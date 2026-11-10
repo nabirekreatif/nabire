@@ -20,7 +20,8 @@ const shell = fs.existsSync(path.join(FE, 'dist/shell.html')) ? fs.readFileSync(
 const FONTS = 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';
 const SHELL_GUARD = "(function(h){if(h&&!/^#\\/?(layanan|demo|testimoni|jasa)?(\\?.*)?$/.test(h))document.documentElement.className+=' nk-ns'})(location.hash)";
 /* PWA: deteksi mode aplikasi (standalone) sedini mungkin → kunci zoom + layar pembuka (splash) */
-const PWA_JS = "(function(){var d=document,h=d.documentElement,w=window;w.addEventListener('beforeinstallprompt',function(e){e.preventDefault();w.__nkBIP=e;h.className+=' can-install'});var s=false;try{s=matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: minimal-ui)').matches||navigator.standalone===true}catch(e){}if(!s)return;h.className+=' pwa splash';var m=d.querySelector('meta[name=viewport]');if(m)m.setAttribute('content','width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover');d.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});d.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});try{var n=localStorage.getItem('nk.pwa.nm');if(n)w.__nkNM=n}catch(e){}})();";
+const PWA_JS_RAW = "(function(B){var d=document,h=d.documentElement,w=window;if(B&&!d.querySelector('link[rel=manifest]')){try{var o=location.origin,nm='Nabire Kreatif';try{nm=localStorage.getItem('nk.pwa.nm')||nm}catch(e){}var ic=function(n,z,p){return{src:B+'assets/'+n,sizes:z,type:'image/png',purpose:p||'any'}};var mf={id:o+'/',name:nm,short_name:nm.slice(0,12),description:'Jasa website, produk digital & kelas online',lang:'id',start_url:o+'/#/',scope:o+'/',display:'standalone',display_override:['standalone','minimal-ui'],orientation:'portrait',background_color:'#0A4C7A',theme_color:'#0A4C7A',icons:[ic('icon-192.png','192x192'),ic('icon-512.png','512x512'),ic('icon-maskable-512.png','512x512','maskable')]};var l=d.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));d.head.appendChild(l)}catch(e){}}w.addEventListener('beforeinstallprompt',function(e){e.preventDefault();w.__nkBIP=e;h.className+=' can-install'});var s=false;try{s=matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: minimal-ui)').matches||navigator.standalone===true}catch(e){}if(!s)return;h.className+=' pwa splash';var m=d.querySelector('meta[name=viewport]');if(m)m.setAttribute('content','width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover');d.addEventListener('gesturestart',function(e){e.preventDefault()},{passive:false});d.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});try{var n=localStorage.getItem('nk.pwa.nm');if(n)w.__nkNM=n}catch(e){}})(__B__);";
+const PWA_JS = b => PWA_JS_RAW.replace('__B__', b ? JSON.stringify(b) : '0');
 const SPLASH_CSS = "#nk-splash{display:none;position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0A4C7A,#072b4a);color:#fff;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;transition:opacity .35s ease}html.splash body{overflow:hidden}html.sp-out #nk-splash{opacity:0;pointer-events:none}#nk-splash .sp-in{display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;text-align:center}#nk-splash img{width:92px;height:92px;border-radius:26px;background:#fff;padding:8px;box-shadow:0 18px 40px rgba(0,0,0,.25);animation:nksp 1.6s ease-in-out infinite}#nk-splash b{font-size:22px;font-weight:800;margin-top:14px;letter-spacing:-.01em}#nk-splash small{font-size:13px;opacity:.8;min-height:18px}#nk-splash .sp-bar{width:190px;height:5px;border-radius:5px;background:rgba(255,255,255,.18);overflow:hidden;margin-top:14px}#nk-splash .sp-bar i{display:block;height:100%;width:6%;border-radius:5px;background:#F28500;transition:width .35s ease}@keyframes nksp{50%{transform:scale(1.06)}}@media(prefers-reduced-motion:reduce){#nk-splash img{animation:none}}";
 const SPLASH_HTML = (src) => `<div id="nk-splash" aria-hidden="true"><div class="sp-in"><img src="${src}" alt="" width="92" height="92"/><b id="sp-n">Nabire Kreatif</b><small id="sp-t">Menyiapkan aplikasi…</small><div class="sp-bar"><i id="sp-p"></i></div></div></div>`;
 fs.writeFileSync(path.join(FE, 'sw.js'), fs.readFileSync(path.join(__dirname, 'sw.template.js'), 'utf8').replace(/__VER__/g, ver));
@@ -44,7 +45,7 @@ const index = `<!doctype html>
 <link rel="stylesheet" href="${FONTS}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="${FONTS}"></noscript>
 <style>html{background:#eef4ff}html.nk-ns #nk-shell{display:none}${SPLASH_CSS}html.splash #nk-splash{display:flex}</style>
-<script>${PWA_JS}${SHELL_GUARD}</script>
+<script>${PWA_JS(0)}${SHELL_GUARD}</script>
 </head>
 <body>
 ${SPLASH_HTML('assets/icon-192.png')}
@@ -78,12 +79,11 @@ const theme = `<?xml version="1.0" encoding="UTF-8" ?>
   <title><data:blog.pageTitle/></title>
   <meta content='#0A4C7A' name='theme-color'/>
   <link href='${BASE}assets/favicon.png' rel='icon' type='image/png'/>
-  <link href='${BASE}manifest-blogger.webmanifest' rel='manifest'/>
   <link href='${BASE}assets/apple-touch-icon.png' rel='apple-touch-icon'/>
   <meta content='yes' name='apple-mobile-web-app-capable'/><meta content='yes' name='mobile-web-app-capable'/>
   <meta content='black-translucent' name='apple-mobile-web-app-status-bar-style'/><meta content='Nabire Kreatif' name='apple-mobile-web-app-title'/>
   <script>//<![CDATA[
-  ${PWA_JS}
+  ${PWA_JS(BASE)}
   ${HOME_JS}
   //]]></script>
   <b:if cond='${PT('static_page')}'>

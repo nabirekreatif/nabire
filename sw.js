@@ -1,7 +1,7 @@
 /* Service worker Nabire Kreatif — cache ringan agar aplikasi (PWA) cepat dibuka.
    Data dari Google Apps Script TIDAK pernah di-cache di sini (selalu langsung ke server). */
-const V = 'nk-17b9cee5';
-const CORE = ['./', 'index.html', 'dist/nk.min.css?v=17b9cee5', 'dist/nk.min.js?v=17b9cee5', 'js/config.js?v=17b9cee5', 'assets/icon-192.png', 'assets/logo-icon.png', 'manifest.webmanifest'];
+const V = 'nk-9c6cb167';
+const CORE = ['./', 'index.html', 'dist/nk.min.css?v=9c6cb167', 'dist/nk.min.js?v=9c6cb167', 'js/config.js?v=9c6cb167', 'assets/icon-192.png', 'assets/logo-icon.png', 'manifest.webmanifest'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => Promise.all(CORE.map(u => c.add(u).catch(() => { })))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

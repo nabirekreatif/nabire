@@ -207,3 +207,17 @@ Alur: pembeli bayar di Lynk.id → Lynk.id mengirim *webhook* ke backend → bac
 - Di versi GitHub Pages aplikasi memakai *service worker* (`sw.js`) sehingga tampilan terbuka cepat walau sinyal lemah. Di Blogger, service worker tidak bisa dipasang (Blogger tidak mengizinkan unggah file), jadi tombol instal otomatis memakai cara bawaan browser (menu ⋮ → Instal aplikasi / Tambahkan ke layar utama) — tetap terbuka layar penuh dengan ikon sendiri.
 - iPhone: pasang lewat Safari → Bagikan → Tambahkan ke Layar Utama.
 - Setelah tema/situs diperbarui, aplikasi yang sudah terpasang ikut memakai versi baru saat dibuka kembali.
+
+## v5.6 — Tombol Instal (PWA) diperbaiki & header baru
+
+**Tombol Instal App**
+- **Blogger:** manifest aplikasi sekarang dibuat langsung oleh tema di domain blog Anda (alamat awal `https://domain-anda/#/`). Cara lama (file manifest di GitHub) ditolak Chrome karena beda domain, jadi tombol instal tidak bisa jalan. Sekarang Chrome menganggap situs Blogger **bisa dipasang**, sehingga jendela instal langsung muncul saat tombol diklik.
+- **GitHub Pages:** sudah memenuhi syarat instal. Jika tombol tetap menampilkan panduan, biasanya aplikasi **sudah terpasang** di perangkat itu (Chrome tidak menawarkan instal dua kali) atau browser yang dipakai bukan Chrome/Edge. Di iPhone, pemasangan selalu lewat Safari → Bagikan → Tambahkan ke Layar Utama.
+- Tombol menunggu ±1,5 detik agar browser siap sebelum menampilkan panduan.
+
+**Header publik baru**
+- Satu baris rapi: logo · 5 menu inti (Beranda, Layanan, Produk, Kelas, Portofolio) · ikon Instal · Masuk/Area Member · tombol **Menu**.
+- Tombol **Menu** membuka panel berisi semua halaman lengkap dengan ikon (termasuk Testimoni, Redeem Kode, Pesan Jasa Website, Artikel di Blogger), tombol Instal Aplikasi, dan Chat Admin WhatsApp.
+- Tombol **Konsultasi** dan **Redeem Kode** di header dihapus (pindah ke panel Menu). Di HP/tablet menu inti disembunyikan dan cukup memakai tombol Menu.
+
+**Cara memperbarui:** unggah isi zip frontend v5.6 ke GitHub, lalu pulihkan tema Blogger `blogger/Tema-Blogger-Nabire-Kreatif.xml` (wajib, karena perbaikan PWA ada di tema). Backend tidak berubah dari v5.5.

@@ -255,7 +255,7 @@
     const app = $('#app');
     if (layout === 'bare') { app.innerHTML = '<main id="view"></main>'; document.body.classList.remove('has-bnav'); S.chromeKey = ''; return; }
     if (layout === 'pub') {
-      app.innerHTML = '<div id="banner"></div><header id="topbar"><div class="wrap-c tb"><a class="brand" href="#/" id="brand"></a><nav class="nav-l" id="nav-pub"></nav><div class="tb-r" id="acct"></div></div></header><main id="view"></main><footer class="ft" id="foot"></footer><nav id="bnav"></nav>';
+      app.innerHTML = '<div id="banner"></div><header id="topbar"><div class="wrap-c tb"><a class="brand" href="#/" id="brand"></a><nav class="nav-l" id="nav-pub" aria-label="Navigasi utama"></nav><div class="tb-r" id="acct"></div></div><div class="pmenu" id="pmenu" hidden></div></header><main id="view"></main><footer class="ft" id="foot"></footer><nav id="bnav"></nav>';
     } else {
       app.innerHTML = '<div class="app"><aside class="side"><a class="brand" href="#/" id="brand"></a><nav id="side-nav" class="col" style="gap:2px"></nav><div class="foot" id="side-foot"></div></aside><div class="main"><header class="apptop"><a class="brand" href="#/" id="brand2"></a><div class="lbl" id="lbl"></div><div class="me" id="acct"></div></header><div id="banner"></div><main id="view" class="page"></main></div></div><nav id="bnav"></nav>';
     }
@@ -360,7 +360,22 @@
   }
   function forceLogout(msg) { logout(msg); }
 
-  const NAV_PUB = [['/', 'Beranda'], ['/layanan', 'Layanan Web'], ['/katalog', 'Produk Digital'], ['/katalog/kelas', 'Kelas Online'], ['/demo', 'Portofolio & Demo'], ['/testimoni', 'Testimoni']];
+  const NAV_PUB = [['/', 'Beranda'], ['/layanan', 'Layanan'], ['/katalog', 'Produk'], ['/katalog/kelas', 'Kelas'], ['/demo', 'Portofolio']];
+  const MENU_PUB = [['/', 'home', 'Beranda', 'Halaman utama'], ['/layanan', 'globe', 'Layanan Web', 'Paket website & aplikasi'], ['/katalog', 'box', 'Produk Digital', 'Template, e-book & aset'], ['/katalog/kelas', 'video', 'Kelas Online', 'Belajar lewat video'], ['/demo', 'eye', 'Portofolio & Demo', 'Coba demo nyata'], ['/testimoni', 'star', 'Testimoni', 'Cerita pelanggan'], ['/redeem', 'key', 'Redeem Kode', 'Punya kode akses?'], ['/jasa', 'send', 'Pesan Jasa Website', 'Konsultasi gratis']];
+  function pubMenuHTML() {
+    const path = S.route ? S.route.path : '/', wa = setting('wa_admin');
+    const items = MENU_PUB.map(m => '<a class="pm-i ' + (activeIn(path, m[0]) ? 'on' : '') + '" href="#' + m[0] + '"><span class="pm-ic">' + ic(m[1], 'sm') + '</span><span><b>' + esc(m[2]) + '</b><small>' + esc(m[3]) + '</small></span></a>').join('') + (IS_BLOGGER ? '<a class="pm-i" href="/search"><span class="pm-ic">' + ic('file', 'sm') + '</span><span><b>Artikel &amp; Tips</b><small>Bacaan seputar digital</small></span></a>' : '');
+    return '<div class="pm-h"><b>Menu</b><button type="button" class="x" data-act="pub-menu" aria-label="Tutup menu">' + ic('x', 'sm') + '</button></div><div class="pm-g">' + items + '</div><div class="pm-f">' + (isPWA() ? '' : '<button type="button" class="btn soft sm" data-act="pwa-install">' + ic('download', 'sm') + 'Instal Aplikasi</button>') + (wa ? '<a class="btn wa sm" href="' + esc(waLink(wa, 'Halo ' + appName() + ', saya ingin bertanya.')) + '" target="_blank" rel="noopener">' + ic('whatsapp', 'sm') + 'Chat Admin</a>' : '') + '</div>';
+  }
+  function pubMenu(open) {
+    const pm = $('#pmenu'), b = $('#acct .menu-btn'); if (!pm) return;
+    const on = open == null ? pm.hidden : !!open; if (on) pm.innerHTML = pubMenuHTML();
+    pm.hidden = !on; document.documentElement.classList.toggle('pm-open', on); if (b) b.setAttribute('aria-expanded', String(on));
+  }
+  ACT['pub-menu'] = () => pubMenu();
+  document.addEventListener('click', e => { const pm = $('#pmenu'); if (pm && !pm.hidden && !e.target.closest('#pmenu, .menu-btn')) pubMenu(false); if (pm && !pm.hidden && e.target.closest('#pmenu a')) pubMenu(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') pubMenu(false); });
+  w.addEventListener('hashchange', () => pubMenu(false));
   const SIDE_MEM = [['/saya', 'Beranda Member', 'grid'], ['/saya/kelas', 'Kelas & Materi Saya', 'cap'], ['/saya/aset', 'Aset & Lisensi Digital', 'cloud'], ['/saya/riwayat', 'Riwayat & Invoice', 'receipt'], ['/saya/linkbio', 'Link Bio Saya', 'link'], ['/saya/klaim', 'Klaim Token Baru', 'key'], ['/saya/profil', 'Profil & Keamanan', 'user']];
   const SIDE_ADM = [
     ['Ringkasan', [['/admin', 'Dasbor Admin', 'grid'], ['/admin/statistik', 'Statistik Web', 'chart']]],
@@ -378,8 +393,8 @@
     const setH = (id, h) => { const el = $(id); if (el) el.innerHTML = h; };
     if (lay === 'pub') {
       setH('#brand', brandHTML('Digital Hub Nabire'));
-      setH('#nav-pub', NAV_PUB.map(n => '<a href="#' + n[0] + '" class="' + (activeIn(path, n[0]) ? 'on' : '') + '">' + n[1].replace(' ', '<br>') + '</a>').join(''));
-      setH('#acct', pwaBtn() + '<a class="btn out hid-m" href="#/redeem">' + ic('key', 'sm') + 'Redeem Kode</a>' + (me ? '<a class="btn soft" href="#/saya">' + ic('user', 'sm') + '<span class="hid-m">Area Member</span></a>' : '<a class="btn soft" href="#/masuk">' + ic('user', 'sm') + '<span>Masuk</span></a>') + '<a class="btn pri hid-m" href="#/jasa">' + ic('send', 'sm') + 'Konsultasi</a>');
+      setH('#nav-pub', NAV_PUB.map(n => '<a href="#' + n[0] + '" class="' + (activeIn(path, n[0]) ? 'on' : '') + '">' + esc(n[1]) + '</a>').join(''));
+      setH('#acct', pwaBtn(true) + (me ? '<a class="btn soft acc-btn" href="#/saya">' + ic('user', 'sm') + '<span class="hid-s">Area Member</span></a>' : '<a class="btn soft acc-btn" href="#/masuk">' + ic('user', 'sm') + '<span>Masuk</span></a>') + '<button type="button" class="btn nav menu-btn" data-act="pub-menu" aria-expanded="false" aria-controls="pmenu" aria-label="Buka menu">' + ic('grid', 'sm') + '<span class="hid-s">Menu</span></button>');
       const rk = jsonSetting('rekening');
       setH('#foot', footerHTML());
       setH('#bnav', bnav([['/', 'Beranda', 'home'], ['/katalog', 'Katalog', 'box'], ['/redeem', 'Redeem', 'key'], [me ? '/saya' : '/masuk', 'Member', 'user']].concat(isAdmin() ? [['/admin', 'Admin', 'grid']] : []), path));
@@ -396,7 +411,7 @@
       setH('#lbl', ic('server', 'sm') + 'NABIRE ADMIN CONSOLE');
       setH('#side-nav', SIDE_ADM.map(g => '<div class="sec-t">' + g[0] + '</div>' + g[1].map(n => '<a class="m ' + (sideOn(path, n[0]) ? 'on' : '') + '" href="#' + n[0] + '">' + ic(n[2]) + '<span>' + n[1] + '</span>' + (n[3] === 'pend' && pend ? '<span class="cnt">' + pend + '</span>' : '') + (n[3] === 'jasa' && jasa ? '<span class="cnt">' + jasa + '</span>' : '') + '</a>').join('')).join(''));
       setH('#side-foot', '<a class="m side-a" style="display:flex;gap:12px;padding:11px 14px;font-size:14px;font-weight:600;color:var(--mute)" href="#/saya">' + ic('user') + 'Lihat sebagai Member</a><a class="m side-a" style="display:flex;gap:12px;padding:11px 14px;font-size:14px;font-weight:600;color:var(--mute)" href="#/">' + ic('logout') + 'Kembali ke Portal Publik</a><button class="m side-a" style="display:flex;gap:12px;padding:11px 14px;font-size:14px;font-weight:600;color:var(--err);width:100%" data-act="logout">' + ic('logout') + 'Keluar</button>');
-      { const f = document.getElementById('side-foot'); if (f && !f.querySelector('.ver')) f.insertAdjacentHTML('beforeend', '<div class="ver small muted" style="padding:6px 14px">Versi 5.5 · Aplikasi (PWA) &amp; label PO</div>'); }
+      { const f = document.getElementById('side-foot'); if (f && !f.querySelector('.ver')) f.insertAdjacentHTML('beforeend', '<div class="ver small muted" style="padding:6px 14px">Versi 5.6 · Header baru &amp; PWA Blogger</div>'); }
       setH('#acct', acctHTML());
       setH('#bnav', bnav([['/admin', 'Dasbor', 'grid'], ['/admin/persetujuan', 'Persetujuan', 'shield', pend], ['/admin/member', 'Member', 'users'], ['/admin/menu', 'Menu', 'menu']], path));
     }
@@ -540,18 +555,21 @@
   let ltRaf = 0; const ltObs = new MutationObserver(() => { if (!ltRaf) ltRaf = requestAnimationFrame(() => { ltRaf = 0; labelTables(); }); });
   /* ---------------- PWA: tombol instal, mode aplikasi, layar pembuka + muat data awal ---------------- */
   const H = document.documentElement, isPWA = () => H.classList.contains('pwa');
-  function pwaBtn() { return isPWA() ? '' : '<button class="btn soft pwa-btn" data-act="pwa-install" title="Instal aplikasi di HP / komputer" aria-label="Instal aplikasi">' + ic('download', 'sm') + '<span class="hid-m">Instal App</span></button>'; }
+  function pwaBtn(iconOnly) { return isPWA() ? '' : '<button class="btn soft pwa-btn' + (iconOnly ? ' ico-only' : '') + '" data-act="pwa-install" title="Instal aplikasi di HP / komputer" aria-label="Instal aplikasi">' + ic('download', 'sm') + (iconOnly ? '' : '<span class="hid-m">Instal App</span>') + '</button>'; }
   w.addEventListener('beforeinstallprompt', e => { e.preventDefault(); w.__nkBIP = e; H.classList.add('can-install'); });
   w.addEventListener('appinstalled', () => { w.__nkBIP = null; H.classList.remove('can-install'); toast('Aplikasi berhasil dipasang. Buka dari layar utama HP Anda.', 'ok', 6000); });
   ACT['pwa-install'] = async () => {
-    const bip = w.__nkBIP;
+    pubMenu(false);
+    let bip = w.__nkBIP;
+    if (!bip && !isPWA()) { for (let i = 0; i < 8 && !w.__nkBIP; i++) await new Promise(r => setTimeout(r, 200)); bip = w.__nkBIP; }
     if (bip) { try { bip.prompt(); const c = await bip.userChoice; w.__nkBIP = null; H.classList.remove('can-install'); if (c && c.outcome === 'accepted') toast('Memasang aplikasi…', 'ok'); } catch (e) { } return; }
     const ua = navigator.userAgent, ios = /iphone|ipad|ipod/i.test(ua) || (/macintosh/i.test(ua) && navigator.maxTouchPoints > 1), android = /android/i.test(ua);
     const st = (n, t) => '<li><span class="stepn">' + n + '</span><span>' + t + '</span></li>';
     const steps = ios ? st(1, 'Buka halaman ini di <b>Safari</b>.') + st(2, 'Ketuk tombol <b>Bagikan</b> ' + ic('ext', 'sm') + ' di bawah layar.') + st(3, 'Pilih <b>Tambahkan ke Layar Utama</b>, lalu ketuk <b>Tambah</b>.')
       : android ? st(1, 'Buka halaman ini di <b>Google Chrome</b>.') + st(2, 'Ketuk menu <b>⋮</b> di kanan atas.') + st(3, 'Pilih <b>Instal aplikasi</b> atau <b>Tambahkan ke layar utama</b>.')
         : st(1, 'Buka di <b>Google Chrome</b> atau <b>Microsoft Edge</b>.') + st(2, 'Klik ikon <b>Instal</b> ' + ic('download', 'sm') + ' di ujung kanan kolom alamat, atau menu <b>⋮ → Simpan dan bagikan → Instal</b>.') + st(3, 'Klik <b>Instal</b>. Aplikasi muncul di desktop / menu Start.');
-    modal({ title: 'Instal Aplikasi ' + appName(), body: '<div class="row" style="gap:14px;align-items:center;margin-bottom:14px"><img src="' + esc(asset('assets/icon-192.png')) + '" alt="" width="56" height="56" style="border-radius:16px;box-shadow:var(--sh)"><p class="small muted" style="margin:0">Pasang ' + esc(appName()) + ' di layar utama: terbuka layar penuh seperti aplikasi, lebih cepat, tanpa perlu mengetik alamat.</p></div><ol class="pwa-steps">' + steps + '</ol>', foot: '<button class="btn pri" data-act="modal-close">Mengerti</button>' });
+    const note = '<p class="tiny muted" style="margin-top:12px">Jika pilihan instal tidak muncul, kemungkinan aplikasi sudah terpasang — cari ikon <b>' + esc(appName()) + '</b> di layar utama / daftar aplikasi.</p>';
+    modal({ title: 'Instal Aplikasi ' + appName(), body: '<div class="row" style="gap:14px;align-items:center;margin-bottom:14px"><img src="' + esc(asset('assets/icon-192.png')) + '" alt="" width="56" height="56" style="border-radius:16px;box-shadow:var(--sh)"><p class="small muted" style="margin:0">Pasang ' + esc(appName()) + ' di layar utama: terbuka layar penuh seperti aplikasi, lebih cepat, tanpa perlu mengetik alamat.</p></div><ol class="pwa-steps">' + steps + '</ol>' + note, foot: '<button class="btn pri" data-act="modal-close">Mengerti</button>' });
   };
   function pwaInit() {
     if (!IS_BLOGGER && BASE === '' && 'serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) && !CFG.NO_SW) w.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => { }));
