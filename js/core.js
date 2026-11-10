@@ -229,7 +229,7 @@
   document.addEventListener('click', e => {
     const el = e.target.closest('[data-act]'); if (!el) return;
     const a = el.getAttribute('data-act');
-    if (a === 'scrim') { if (e.target === el) closeModal(); return; }
+    if (a === 'scrim') { if (e.target === el) { const sh = el.querySelector('.sheet'); if (sh) { sh.classList.remove('nudge'); void sh.offsetWidth; sh.classList.add('nudge'); } } return; }
     if (a === 'modal-close') return closeModal();
     if (a === 'cf-yes') return CONFIRM.yes && CONFIRM.yes();
     if (a === 'cf-no') return CONFIRM.no && CONFIRM.no();
@@ -238,7 +238,7 @@
   document.addEventListener('submit', e => { const f = e.target.closest('form[data-form]'); if (!f) return; e.preventDefault(); const n = f.getAttribute('data-form'); if (FORM[n]) FORM[n](f, e); });
   document.addEventListener('input', e => { const el = e.target.closest('[data-input]'); if (el && INPUT[el.getAttribute('data-input')]) INPUT[el.getAttribute('data-input')](el, e); });
   document.addEventListener('change', e => { const el = e.target.closest('[data-change]'); if (el && INPUT[el.getAttribute('data-change')]) INPUT[el.getAttribute('data-change')](el, e); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalOpen()) closeModal(); });
+  /* Popup hanya ditutup lewat tombol X / Tutup / Batal — klik di luar & tombol Esc tidak menutup (mencegah isian hilang). */
   ACT.copy = el => copy(el.getAttribute('data-v') || '');
   ACT.logout = () => logout();
   ACT.go = el => go(el.getAttribute('data-to'));
@@ -379,7 +379,7 @@
     if (lay === 'pub') {
       setH('#brand', brandHTML('Digital Hub Nabire'));
       setH('#nav-pub', NAV_PUB.map(n => '<a href="#' + n[0] + '" class="' + (activeIn(path, n[0]) ? 'on' : '') + '">' + n[1].replace(' ', '<br>') + '</a>').join(''));
-      setH('#acct', '<a class="btn out hid-m" href="#/redeem">' + ic('key', 'sm') + 'Redeem Kode</a>' + (me ? '<a class="btn soft" href="#/saya">' + ic('user', 'sm') + '<span class="hid-m">Area Member</span></a>' : '<a class="btn soft" href="#/masuk">' + ic('user', 'sm') + '<span>Masuk</span></a>') + '<a class="btn pri hid-m" href="#/jasa">' + ic('send', 'sm') + 'Konsultasi</a>');
+      setH('#acct', pwaBtn() + '<a class="btn out hid-m" href="#/redeem">' + ic('key', 'sm') + 'Redeem Kode</a>' + (me ? '<a class="btn soft" href="#/saya">' + ic('user', 'sm') + '<span class="hid-m">Area Member</span></a>' : '<a class="btn soft" href="#/masuk">' + ic('user', 'sm') + '<span>Masuk</span></a>') + '<a class="btn pri hid-m" href="#/jasa">' + ic('send', 'sm') + 'Konsultasi</a>');
       const rk = jsonSetting('rekening');
       setH('#foot', footerHTML());
       setH('#bnav', bnav([['/', 'Beranda', 'home'], ['/katalog', 'Katalog', 'box'], ['/redeem', 'Redeem', 'key'], [me ? '/saya' : '/masuk', 'Member', 'user']].concat(isAdmin() ? [['/admin', 'Admin', 'grid']] : []), path));
@@ -396,14 +396,14 @@
       setH('#lbl', ic('server', 'sm') + 'NABIRE ADMIN CONSOLE');
       setH('#side-nav', SIDE_ADM.map(g => '<div class="sec-t">' + g[0] + '</div>' + g[1].map(n => '<a class="m ' + (sideOn(path, n[0]) ? 'on' : '') + '" href="#' + n[0] + '">' + ic(n[2]) + '<span>' + n[1] + '</span>' + (n[3] === 'pend' && pend ? '<span class="cnt">' + pend + '</span>' : '') + (n[3] === 'jasa' && jasa ? '<span class="cnt">' + jasa + '</span>' : '') + '</a>').join('')).join(''));
       setH('#side-foot', '<a class="m side-a" style="display:flex;gap:12px;padding:11px 14px;font-size:14px;font-weight:600;color:var(--mute)" href="#/saya">' + ic('user') + 'Lihat sebagai Member</a><a class="m side-a" style="display:flex;gap:12px;padding:11px 14px;font-size:14px;font-weight:600;color:var(--mute)" href="#/">' + ic('logout') + 'Kembali ke Portal Publik</a><button class="m side-a" style="display:flex;gap:12px;padding:11px 14px;font-size:14px;font-weight:600;color:var(--err);width:100%" data-act="logout">' + ic('logout') + 'Keluar</button>');
-      { const f = document.getElementById('side-foot'); if (f && !f.querySelector('.ver')) f.insertAdjacentHTML('beforeend', '<div class="ver small muted" style="padding:6px 14px">Versi 5.0 · Beranda baru &amp; lebih cepat</div>'); }
+      { const f = document.getElementById('side-foot'); if (f && !f.querySelector('.ver')) f.insertAdjacentHTML('beforeend', '<div class="ver small muted" style="padding:6px 14px">Versi 5.5 · Aplikasi (PWA) &amp; label PO</div>'); }
       setH('#acct', acctHTML());
       setH('#bnav', bnav([['/admin', 'Dasbor', 'grid'], ['/admin/persetujuan', 'Persetujuan', 'shield', pend], ['/admin/member', 'Member', 'users'], ['/admin/menu', 'Menu', 'menu']], path));
     }
   }
   const sideOn = (path, to) => (to === '/saya' ? path === '/saya' : to === '/admin' ? path === '/admin' : path === to || path.indexOf(to + '/') === 0);
   function bnav(items, path) { return items.map(n => '<a href="#' + n[0] + '" class="' + (activeIn(path, n[0]) || (n[0] === '/katalog' && path.indexOf('/produk') === 0) ? 'on' : '') + '">' + ic(n[2]) + (n[3] ? '<span class="bd">' + n[3] + '</span>' : '') + '<span>' + n[1] + '</span></a>').join(''); }
-  function acctHTML() { const me = S.session; if (!me) return ''; return '<button class="btn ghost" data-act="reload" title="Muat ulang data" aria-label="Muat ulang">' + ic('refresh') + '</button><div class="t"><b>' + esc(me.nama || me.email) + '</b><span>' + (me.role === 'superadmin' ? 'Super Admin' : 'Lisensi Terverifikasi') + '</span></div><div class="avatar">' + esc(initials(me.nama || me.email)) + '</div>'; }
+  function acctHTML() { const me = S.session; if (!me) return ''; return pwaBtn() + '<button class="btn ghost" data-act="reload" title="Muat ulang data" aria-label="Muat ulang">' + ic('refresh') + '</button><div class="t"><b>' + esc(me.nama || me.email) + '</b><span>' + (me.role === 'superadmin' ? 'Super Admin' : 'Lisensi Terverifikasi') + '</span></div><div class="avatar">' + esc(initials(me.nama || me.email)) + '</div>'; }
   function footerHTML() {
     const wa = setting('wa_admin'), tampil = setting('wa_tampil'), em = setting('email_publik');
     return '<div class="wrap-c"><div class="ft-g"><div><a class="brand" href="#/">' + brandHTML('Digital Hub Nabire') + '</a><p class="small muted" style="margin-top:12px;max-width:340px">' + esc(setting('footer_deskripsi')) + '</p></div><div><h5>Layanan & Katalog</h5><ul><li><a href="#/layanan">Website UMKM & Bisnis</a></li><li><a href="#/katalog">Produk Digital & Template</a></li><li><a href="#/katalog/kelas">Kelas Online Video</a></li><li><a href="#/demo">Galeri Karya Demo</a></li>' + (IS_BLOGGER ? '<li><a href="/search">Artikel & Tips</a></li>' : '') + '</ul></div><div><h5>Akses Member</h5><ul><li><a href="#/redeem">Redeem Kode Akses</a></li><li><a href="#/masuk">Masuk Area Member</a></li><li><a href="#/daftar">Daftar Akun Baru</a></li><li><a href="#/jasa">Pesan Jasa Website</a></li></ul></div><div><h5>Kontak & Dukungan</h5><ul>' + (wa ? '<li class="row">' + ic('chat', 'sm') + '<a href="' + esc(waLink(wa)) + '" target="_blank" rel="noopener">WhatsApp ' + esc(tampil || wa) + '</a></li>' : '') + '<li class="row">' + ic('pin', 'sm') + '<span>' + esc(setting('alamat')) + '</span></li>' + (em ? '<li class="row">' + ic('mail', 'sm') + '<a href="mailto:' + esc(em) + '">' + esc(em) + '</a></li>' : '') + '</ul></div></div><div class="ft-b"><span>© ' + new Date().getFullYear() + ' ' + esc(appName()) + '. Seluruh hak cipta dilindungi.</span><span>Wilayah waktu: WIT (UTC+9)</span></div></div>';
@@ -538,6 +538,49 @@
   /* Tabel → kartu di HP: salin judul kolom ke setiap sel (data-l) */
   function labelTables(root) { (root || document).querySelectorAll('table.t').forEach(t => { const hs = [...t.querySelectorAll('thead th')].map(th => th.textContent.trim()); if (!hs.length) return; t.querySelectorAll('tbody tr').forEach(tr => [...tr.children].forEach((td, i) => { if (hs[i] && !td.hasAttribute('data-l')) td.setAttribute('data-l', hs[i]); })); }); }
   let ltRaf = 0; const ltObs = new MutationObserver(() => { if (!ltRaf) ltRaf = requestAnimationFrame(() => { ltRaf = 0; labelTables(); }); });
+  /* ---------------- PWA: tombol instal, mode aplikasi, layar pembuka + muat data awal ---------------- */
+  const H = document.documentElement, isPWA = () => H.classList.contains('pwa');
+  function pwaBtn() { return isPWA() ? '' : '<button class="btn soft pwa-btn" data-act="pwa-install" title="Instal aplikasi di HP / komputer" aria-label="Instal aplikasi">' + ic('download', 'sm') + '<span class="hid-m">Instal App</span></button>'; }
+  w.addEventListener('beforeinstallprompt', e => { e.preventDefault(); w.__nkBIP = e; H.classList.add('can-install'); });
+  w.addEventListener('appinstalled', () => { w.__nkBIP = null; H.classList.remove('can-install'); toast('Aplikasi berhasil dipasang. Buka dari layar utama HP Anda.', 'ok', 6000); });
+  ACT['pwa-install'] = async () => {
+    const bip = w.__nkBIP;
+    if (bip) { try { bip.prompt(); const c = await bip.userChoice; w.__nkBIP = null; H.classList.remove('can-install'); if (c && c.outcome === 'accepted') toast('Memasang aplikasi…', 'ok'); } catch (e) { } return; }
+    const ua = navigator.userAgent, ios = /iphone|ipad|ipod/i.test(ua) || (/macintosh/i.test(ua) && navigator.maxTouchPoints > 1), android = /android/i.test(ua);
+    const st = (n, t) => '<li><span class="stepn">' + n + '</span><span>' + t + '</span></li>';
+    const steps = ios ? st(1, 'Buka halaman ini di <b>Safari</b>.') + st(2, 'Ketuk tombol <b>Bagikan</b> ' + ic('ext', 'sm') + ' di bawah layar.') + st(3, 'Pilih <b>Tambahkan ke Layar Utama</b>, lalu ketuk <b>Tambah</b>.')
+      : android ? st(1, 'Buka halaman ini di <b>Google Chrome</b>.') + st(2, 'Ketuk menu <b>⋮</b> di kanan atas.') + st(3, 'Pilih <b>Instal aplikasi</b> atau <b>Tambahkan ke layar utama</b>.')
+        : st(1, 'Buka di <b>Google Chrome</b> atau <b>Microsoft Edge</b>.') + st(2, 'Klik ikon <b>Instal</b> ' + ic('download', 'sm') + ' di ujung kanan kolom alamat, atau menu <b>⋮ → Simpan dan bagikan → Instal</b>.') + st(3, 'Klik <b>Instal</b>. Aplikasi muncul di desktop / menu Start.');
+    modal({ title: 'Instal Aplikasi ' + appName(), body: '<div class="row" style="gap:14px;align-items:center;margin-bottom:14px"><img src="' + esc(asset('assets/icon-192.png')) + '" alt="" width="56" height="56" style="border-radius:16px;box-shadow:var(--sh)"><p class="small muted" style="margin:0">Pasang ' + esc(appName()) + ' di layar utama: terbuka layar penuh seperti aplikasi, lebih cepat, tanpa perlu mengetik alamat.</p></div><ol class="pwa-steps">' + steps + '</ol>', foot: '<button class="btn pri" data-act="modal-close">Mengerti</button>' });
+  };
+  function pwaInit() {
+    if (!IS_BLOGGER && BASE === '' && 'serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) && !CFG.NO_SW) w.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => { }));
+    if (!H.classList.contains('splash')) return;
+    const el = document.getElementById('nk-splash'); if (!el) { H.classList.remove('splash'); return; }
+    const bar = document.getElementById('sp-p'), txt = document.getElementById('sp-t'), nm = document.getElementById('sp-n');
+    if (nm && w.__nkNM) nm.textContent = w.__nkNM;
+    const tasks = []; let done = 0, fin = false;
+    const add = (label, p) => tasks.push({ label, p: Promise.resolve(p).catch(() => { }) });
+    const prog = () => { if (bar) bar.style.width = Math.round(8 + 80 * done / Math.max(1, tasks.length)) + '%'; const t = tasks.find(x => !x.ok); if (txt && t) txt.textContent = t.label; };
+    add('Memuat katalog & pengaturan…', revalidate('pub', 'pub', {}));
+    if (S.session) { add('Memuat akun Anda…', revalidate('u', 'boot', {})); if (isAdmin()) { add('Menyiapkan dasbor admin…', revalidate('u', 'adm', {})); if (w.NK_BUNDLE) add('Menyiapkan menu admin…', loadApp2()); } }
+    if (document.fonts && document.fonts.ready) add('Menyiapkan tampilan…', Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 2500))]));
+    tasks.forEach(t => t.p.then(() => { t.ok = true; done++; prog(); }));
+    prog();
+    const imgsReady = ms => new Promise(r => {
+      const vh = innerHeight * 1.4, imgs = [...document.querySelectorAll('#view img')].filter(i => i.getBoundingClientRect().top < vh && !i.complete);
+      try { const P = pubData(); (P.products || []).slice(0, 8).forEach(p => { const u = safeUrl(p.cover_url); if (u) { const im = new Image(); im.decoding = 'async'; im.src = u; } }); } catch (e) { }
+      if (!imgs.length) return r(); let k = imgs.length; const one = () => { if (--k <= 0) r(); };
+      imgs.forEach(i => { i.loading = 'eager'; i.addEventListener('load', one, { once: true }); i.addEventListener('error', one, { once: true }); }); setTimeout(r, ms);
+    });
+    const finish = () => {
+      if (fin) return; fin = true; if (bar) bar.style.width = '100%'; if (txt) txt.textContent = 'Siap!';
+      try { localStorage.setItem('nk.pwa.nm', appName()); } catch (e) { }
+      setTimeout(() => { H.classList.add('sp-out'); setTimeout(() => { H.classList.remove('splash', 'sp-out'); el.remove(); }, 380); }, 160);
+    };
+    Promise.all(tasks.map(t => t.p)).then(() => { if (nm) nm.textContent = appName(); if (txt) txt.textContent = 'Menyiapkan halaman…'; if (bar) bar.style.width = '92%'; softRender(); return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }).then(() => imgsReady(3000)).then(finish);
+    setTimeout(finish, 12000);
+  }
   function start() {
     ltObs.observe(document.getElementById('app') || document.body, { childList: true, subtree: true });
     purgeOld(); loadSession();
@@ -545,6 +588,7 @@
     if (S.session) afterLogin();
     usePubBoot();
     if (!location.hash) location.hash = '#/'; else renderRoute(false);
+    pwaInit();
     if (S.session) { revalidate('u', 'boot', {}); if (isAdmin()) revalidate('u', 'adm', {}); }
     if (w.NK_BUNDLE && S.session) w.addEventListener('load', () => setTimeout(() => idle(() => loadApp2().catch(() => { })), 1500));
     w.addEventListener('online', () => toast('Kembali online', 'ok'));

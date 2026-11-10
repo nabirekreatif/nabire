@@ -655,3 +655,100 @@ body.lb-on{overflow:hidden}
 .mde-pv{padding:14px 16px;max-height:520px;overflow:auto}
 .mde-ft{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:6px 10px;border-top:1px solid var(--line2);font:500 11px var(--mono);color:var(--mute);background:#F8FAFC}
 @media(max-width:640px){.mde-ft span:last-child{display:none}.mde-b{min-width:32px}}
+/* v5.5 — popup tidak tertutup saat klik di luar: beri getaran kecil sebagai tanda */
+.sheet.nudge{animation:nudge .32s ease}
+@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+.sheet-h .x{width:40px;height:40px;background:var(--bg2);color:var(--ink);flex:none}
+/* v5.5 — Editor Link Bio layar penuh di smartphone */
+@media(max-width:699px){
+  #view:has(.bio-ed){padding:14px 0 calc(96px + env(safe-area-inset-bottom))}
+  #view:has(.bio-ed)>.ph{padding:0 16px;margin-bottom:12px}
+  #view:has(.bio-ed) #bio-save{display:none}
+  #view .bio-tabs{position:sticky;top:60px;z-index:40;display:grid;grid-template-columns:1fr 1fr;max-width:none;width:100%;margin:0 0 10px;border-radius:0;background:#fff;border-bottom:1px solid var(--line2);padding:6px 10px;box-shadow:0 6px 14px rgba(7,43,74,.05)}
+  #view .bio-tabs .tab{justify-content:center;min-height:42px}
+  .bio-ed{gap:0}
+  .bio-ed-l{gap:10px!important}
+  .bio-ed-l>.card{border-radius:0;border-left:0;border-right:0;box-shadow:none;padding:18px 16px}
+  .bio-ed-l>.btn.block{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom));z-index:30;margin:4px 16px 0;width:auto;box-shadow:0 10px 24px rgba(7,43,74,.22)}
+  .bio-ed[data-tab=pv] .bio-sticky{position:static}
+  .bio-ed[data-tab=pv] .bio-sticky .eyebrow{display:none}
+  .bio-ed[data-tab=pv] .phone{max-width:none;aspect-ratio:auto;height:calc(100dvh - 60px - 64px - 70px - env(safe-area-inset-bottom));min-height:480px;border-radius:0;padding:0;box-shadow:none;background:none}
+  .bio-ed[data-tab=pv] .phone-in{border-radius:0}
+}
+/* v5.5 — Pre-Order / Coming Soon */
+.cover .chip.po{background:#7c3aed}
+.pill.po{background:#f3e8ff;color:#6d28d9}
+.po-i{color:#6d28d9!important;font-weight:600}
+.po-box{display:flex;gap:12px;align-items:flex-start;background:#faf5ff;border:1px solid #e9d5ff;border-radius:14px;padding:12px 14px;color:#4c1d95}
+.po-box>.ic{color:#7c3aed;flex:none;margin-top:2px}.po-box b{display:block;font-size:15px}.po-box span{display:block;font-size:13px;line-height:19px;color:#5b21b6;margin-top:2px}
+.pc .acts .po-wa{grid-column:1/-1}
+.pc.is-po .pr b{color:#6d28d9}
+
+/* v5.5 — Katalog rapi di smartphone: 2 kolom ringkas */
+@media(max-width:640px){
+  .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .pgrid .pc{border-radius:14px}
+  .pgrid .pc .cover{aspect-ratio:1/1}
+  .pgrid .pc .cover>.chip:not(.r):not(.pcnt){display:none}
+  .pgrid .pc .cover .chip{top:7px;font-size:9px;padding:3px 6px;letter-spacing:.04em;max-width:calc(100% - 14px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+  .pgrid .pc .cover .chip.r{right:7px;left:auto}
+  .pgrid .pc .cover .chip.pcnt{display:inline-flex;right:7px;bottom:7px;top:auto}
+  .pgrid .pc-b{padding:10px 10px 12px;gap:4px}
+  .pgrid .pc .lbl{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pgrid .pc h4{font-size:13.5px;line-height:18px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}
+  .pgrid .pc .desc{display:none}
+  .pgrid .pc .meta{display:none}
+  .pgrid .pc.is-po .meta{display:block;padding-top:0;font-size:11px;line-height:15px}
+  .pgrid .pc.is-po .meta .ic{display:none}
+  .pgrid .pc .pr{flex-wrap:wrap;gap:0 6px;padding-top:2px;align-items:center}
+  .pgrid .pc .pr b{font-size:16px;width:100%;order:1}
+  .pgrid .pc .pr s{order:2;font-size:10px}
+  .pgrid .pc .pr .pill{order:3;margin-left:0;font-size:10px;line-height:16px;padding:0 6px}
+  .pgrid .pc .acts{grid-template-columns:1fr 40px;gap:6px;margin-top:8px}
+  .pgrid .pc .acts .btn{min-height:40px;font-size:13px;padding:0 8px;gap:5px}
+  .pgrid .pc .acts>.btn.ghost{display:none}
+  .pgrid .pc .acts a[href^="#/redeem"]{font-size:0;padding:0;gap:0}
+  .pgrid .pc .acts a[href^="#/redeem"] .ic{width:18px;height:18px}
+  .pgrid .pc .acts .po-wa span{display:none}
+  .pgrid .pc .acts .po-wa::after{content:"Tanya Admin";font-size:13px}
+  .pgrid .pc .acts .btn[style*="grid-column"]{font-size:12px}
+  .pgrid>.card.empty{grid-column:1/-1}
+}
+
+/* v5.5 — Daftar produk di dasbor rapi di smartphone */
+@media(max-width:640px){
+  .tw table.tprod tr{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"p p" "j h" "l l" "t a";gap:10px 10px;padding:14px 2px;align-items:center}
+  .tw table.tprod td{min-width:0}
+  .tw table.tprod td::before{display:none!important}
+  .tw table.tprod td:nth-child(1){grid-area:p}
+  .tw table.tprod td:nth-child(2){grid-area:j}
+  .tw table.tprod td:nth-child(3){grid-area:h;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .tw table.tprod td:nth-child(3) .sub{font-size:11px}
+  .tw table.tprod td:nth-child(4){grid-area:l;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .tw table.tprod td:nth-child(4):empty{display:none}
+  .tw table.tprod td:nth-child(5){grid-area:t;display:flex;align-items:center;gap:8px;margin:0}
+  .tw table.tprod td:nth-child(5)::after{content:"Tampil";font-size:12px;font-weight:600;color:var(--mute)}
+  .tw table.tprod td:nth-child(6){grid-area:a;justify-self:end;margin:0}
+  .tw table.tprod td:nth-child(1) .row{gap:12px;align-items:center;flex-wrap:nowrap}
+  .tw table.tprod td:nth-child(1) .cover{width:72px!important;aspect-ratio:1/1!important;border-radius:12px!important}
+  .tw table.tprod .tp-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;line-height:19px}
+  .tw table.tprod td:nth-child(1) .sub{max-width:none!important;white-space:normal;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
+  .tw table.tprod tr:hover td{background:none}
+  .tw table.tprod td:nth-child(6) .btn{min-height:36px}
+}
+/* v5.5 — PWA */
+html.pwa{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html.pwa body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+html.pwa *{touch-action:pan-x pan-y}
+html.pwa input,html.pwa select,html.pwa textarea{font-size:16px}
+html.pwa .pwa-btn{display:none!important}
+html.pwa #topbar,html.pwa .apptop{padding-top:env(safe-area-inset-top)}
+html.pwa .apptop{height:calc(60px + env(safe-area-inset-top))}
+.pwa-btn .ic{color:var(--orange-d)}
+html.can-install .pwa-btn{background:#FFF1E0;color:var(--orange-d)}
+.pwa-steps{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.pwa-steps li{display:flex;gap:12px;align-items:center;font-size:14px;line-height:20px}
+.pwa-steps .stepn{flex:none;width:28px;height:28px;border-radius:9px;font-size:13px}
+.pwa-steps .ic{display:inline-block;vertical-align:-3px}
+@media(max-width:640px){#sec-katalog .g3.pgrid{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;scroll-snap-type:none;padding:0}#sec-katalog .g3.pgrid>*{scroll-snap-align:none}}
+@media(max-width:640px){.apptop .pwa-btn span,#topbar .pwa-btn span{display:none}.apptop .pwa-btn,#topbar .pwa-btn{padding:0;width:42px;flex:none}}

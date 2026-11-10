@@ -188,3 +188,22 @@ Alur: pembeli bayar di Lynk.id → Lynk.id mengirim *webhook* ke backend → bac
 - Transaksi yang sama tidak pernah membuat kode dobel. Transaksi belum lunas dilewati.
 - Tombol "Test URL" di Lynk.id bisa menampilkan peringatan karena Apps Script membalas dengan *redirect*; itu normal. Cek tabel **Riwayat webhook** di dasbor: bila baris tes muncul, sambungan sudah berhasil.
 - Kuota email Gmail gratis ± 100 email/hari (Google Workspace ± 1.500).
+
+## v5.5 — Katalog rapi di HP, Aplikasi (PWA), label PO / Coming Soon
+
+**Yang baru**
+1. **Katalog di HP 2 kolom** (beranda & halaman Katalog), kartu ringkas: foto, judul 2 baris, harga, tombol Beli + ikon Kode Akses. Daftar produk di dasbor juga tampil sebagai kartu rapi di HP.
+2. **Aplikasi (PWA)**: tombol **Instal App** (ikon unduh) di bilah atas. Bila HP mendukung, jendela instal langsung muncul; bila tidak, tampil panduan singkat (Android/iPhone/komputer). Di mode aplikasi: layar tidak bisa diperbesar (zoom), gulir atas-bawah & samping tetap jalan, dan saat dibuka muncul **layar pembuka** (logo + bilah progres) sampai data katalog, akun, dan tampilan siap — setelah itu halaman langsung siap dipakai.
+3. **Label PO / Coming Soon**: di form produk ada **Status penjualan** (Tersedia / Pre-Order / Coming Soon) + **Keterangan PO**. Bila aktif: tombol Beli & Kode Akses hilang, diganti **Tanya via WhatsApp** (ke nomor WA admin di Pengaturan Beranda). Server juga menolak pembelian produk berlabel ini.
+4. **Popup dasbor** hanya tertutup lewat tombol **X / Tutup / Batal**. Klik di luar popup atau tombol Esc tidak menutup (popup bergetar sedikit sebagai tanda) — isian form aman.
+5. **Editor Link Bio** di HP layar penuh: kartu selebar layar, tab Edit/Pratinjau menempel di atas, tombol Simpan melayang di bawah, Pratinjau memenuhi layar.
+
+**Cara memperbarui**
+- **Backend:** ganti `Kode.gs` (kolom `status_po`, `po_info` dibuat otomatis) → Terapkan → Kelola deployment → Edit → Versi baru.
+- **GitHub:** unggah seluruh isi zip frontend v5.5 (ada file baru: `manifest.webmanifest`, `manifest-blogger.webmanifest`, `sw.js`, `assets/icon-192.png`, `assets/icon-512.png`, `assets/icon-maskable-512.png`, `assets/apple-touch-icon.png`).
+- **Blogger:** tema **perlu dipulihkan ulang** (Tema → Cadangkan → Pulihkan `blogger/Tema-Blogger-Nabire-Kreatif.xml`). Tema baru menambahkan manifest aplikasi, ikon, layar pembuka, dan kunci zoom. Struktur tata letak (header, artikel + Postingan Blog, footer) tetap sama.
+
+**Catatan PWA**
+- Di versi GitHub Pages aplikasi memakai *service worker* (`sw.js`) sehingga tampilan terbuka cepat walau sinyal lemah. Di Blogger, service worker tidak bisa dipasang (Blogger tidak mengizinkan unggah file), jadi tombol instal otomatis memakai cara bawaan browser (menu ⋮ → Instal aplikasi / Tambahkan ke layar utama) — tetap terbuka layar penuh dengan ikon sendiri.
+- iPhone: pasang lewat Safari → Bagikan → Tambahkan ke Layar Utama.
+- Setelah tema/situs diperbarui, aplikasi yang sudah terpasang ikut memakai versi baru saat dibuka kembali.
